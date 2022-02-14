@@ -6,7 +6,7 @@
 
     <groupId>com.tictaccode</groupId>
     <artifactId>TicTacToe</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <name>TicTacToe</name>
 
     <properties>

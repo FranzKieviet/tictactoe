@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tictaccode.tictactoe.TicTacToeController"
+      fx:id="pane" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #D0D0D0;">
+
+    <Group fx:id="board">
+        <Line fx:id="hLine1" layoutX="110" layoutY="190" startX="0" endX="280" strokeWidth="7" strokeLineCap="ROUND"/>
+        <Line fx:id="hLine2" layoutX="110" layoutY="290" startX="0" endX="280" strokeWidth="7" strokeLineCap="ROUND"/>
+        <Line fx:id="vLine1" layoutX="200" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
+        <Line fx:id="vLine2" layoutX="300" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
+    </Group>
+
+    <Text fx:id="versionLabel" layoutX="5" layoutY="490" style="-fx-font-family: Helvetica; -fx-font-weight: bold;
+        -fx-font-alignment: center; -fx-font-size: 12; -fx-fill: #A0A0A0;" />
+</Pane>
