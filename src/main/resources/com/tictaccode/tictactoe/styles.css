@@ -1,0 +1,14 @@
+.root {
+    -fx-background-color: #D0D0D0;
+}
+
+.gameButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
