@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
 <Pane xmlns="http://javafx.com/javafx"
@@ -13,12 +12,89 @@
       fx:controller="com.tictaccode.tictactoe.TicTacToeController"
       fx:id="pane" prefHeight="500.0" prefWidth="500.0" stylesheets="@styles.css">
 
-    <Group fx:id="board">
+    <!-- holds all the ui elements pertaining to the tic-tac-toe board -->
+    <Group fx:id="gameBoard">
+        <!-- The game board's lines -->
         <Line fx:id="hLine1" layoutX="120" layoutY="190" startX="0" endX="260" strokeWidth="7" strokeLineCap="ROUND"/>
         <Line fx:id="hLine2" layoutX="120" layoutY="290" startX="0" endX="260" strokeWidth="7" strokeLineCap="ROUND"/>
         <Line fx:id="vLine1" layoutX="200" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
         <Line fx:id="vLine2" layoutX="300" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
 
+        <!-- An X piece in each spot on the board -->
+        <Line fx:id="x1L" styleClass="xPiece" layoutX="135" layoutY="125" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x1R" styleClass="xPiece" layoutX="175" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x2L" styleClass="xPiece" layoutX="230" layoutY="125" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x2R" styleClass="xPiece" layoutX="270" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x3L" styleClass="xPiece" layoutX="325" layoutY="125" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x3R" styleClass="xPiece" layoutX="365" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x4L" styleClass="xPiece" layoutX="135" layoutY="220" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x4R" styleClass="xPiece" layoutX="175" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x5L" styleClass="xPiece" layoutX="230" layoutY="220" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x5R" styleClass="xPiece" layoutX="270" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x6L" styleClass="xPiece" layoutX="325" layoutY="220" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x6R" styleClass="xPiece" layoutX="365" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x7L" styleClass="xPiece" layoutX="135" layoutY="315" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x7R" styleClass="xPiece" layoutX="175" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x8L" styleClass="xPiece" layoutX="230" layoutY="315" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x8R" styleClass="xPiece" layoutX="270" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <Line fx:id="x9L" styleClass="xPiece" layoutX="325" layoutY="315" startX="0" startY="0" endX="40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <Line fx:id="x9R" styleClass="xPiece" layoutX="365" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
+              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+
+        <!-- An O piece in each spot on the board -->
+        <Circle fx:id="o1" styleClass="oPiece" centerX="155" layoutY="145" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o2" styleClass="oPiece" centerX="250" layoutY="145" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o3" styleClass="oPiece" centerX="345" layoutY="145" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o4" styleClass="oPiece" centerX="155" layoutY="240" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o5" styleClass="oPiece" centerX="250" layoutY="240" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o6" styleClass="oPiece" centerX="345" layoutY="240" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o7" styleClass="oPiece" centerX="155" layoutY="335" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o8" styleClass="oPiece" centerX="250" layoutY="335" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <Circle fx:id="o9" styleClass="oPiece" centerX="345" layoutY="335" strokeWidth="7" radius="22"
+                visible="false" />
+
+        <!-- The game buttons used to get a player's move in each spot on the board -->
         <Button fx:id="spot1" styleClass="gameButton" layoutX="115" layoutY="105" prefWidth="85" prefHeight="85"
                 focusTraversable="false" onMouseClicked="#placeMove" />
         <Button fx:id="spot2" styleClass="gameButton" layoutX="200" layoutY="105" prefWidth="100" prefHeight="85"
@@ -39,6 +115,6 @@
                 focusTraversable="false" onMouseClicked="#placeMove" />
     </Group>
 
-    <Text fx:id="versionLabel" layoutX="5" layoutY="490" style="-fx-font-family: Helvetica; -fx-font-weight: bold;
-        -fx-font-alignment: center; -fx-font-size: 12; -fx-fill: #A0A0A0;" />
+    <!-- displays the current version of the application -->
+    <Text fx:id="versionLabel" layoutX="5" layoutY="490" />
 </Pane>
