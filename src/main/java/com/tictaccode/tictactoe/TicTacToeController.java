@@ -18,9 +18,6 @@ import java.io.IOException;
  */
 public class TicTacToeController {
 
-    public Pane welcomePane;
-    public Group welcomeBoard;
-    public Button spotNewGame;
     /**
      * Javafx text element retrieved from the fxml file.
      */
@@ -31,7 +28,7 @@ public class TicTacToeController {
      * Javafx button elements retrieved from the fxml file.
      */
     @FXML
-    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, spotBack;
+    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, backButton;
 
     /**
      * Javafx line elements retrieved from the fxml file.
@@ -55,6 +52,8 @@ public class TicTacToeController {
     /** A board object that is used to keep track of the positions of pieces on the board and handle game logic. */
     private Board board;
     
+    private Stage stage;
+    
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -65,7 +64,7 @@ public class TicTacToeController {
         versionLabel.setText(TicTacToeApplication.VERSION);
         
         // initializes the gameButtons array
-        gameButtons = new Button[10];
+        gameButtons = new Button[9];
         gameButtons[0] = spot1;
         gameButtons[1] = spot2;
         gameButtons[2] = spot3;
@@ -75,10 +74,7 @@ public class TicTacToeController {
         gameButtons[6] = spot7;
         gameButtons[7] = spot8;
         gameButtons[8] = spot9;
-        gameButtons[9] = spotBack;
-
-
-
+        
         // initializes the xPieces array
         xPieces = new XPiece[9];
         xPieces[0] = new XPiece("x1", x1L, x1R);
@@ -105,6 +101,11 @@ public class TicTacToeController {
         
         // initializes the board
         board = new Board(this);
+    }
+    
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
     
     
@@ -188,12 +189,9 @@ public class TicTacToeController {
     public void backMove(MouseEvent mouseEvent) throws IOException {
 
         // opening welcome stage after back button clicked event
-        Stage welcomeStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("welcome-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 400);
-        welcomeStage.setTitle("Welcome TicTacToe Game");
-        welcomeStage.setScene(scene);
-        welcomeStage.setResizable(false);
-        welcomeStage.show();
+        Scene scene = new Scene(fxmlLoader.load(), backButton.getScene().getWidth(), backButton.getScene().getHeight());
+        stage.setTitle("Welcome TicTacToe Game");
+        stage.setScene(scene);
     }
 }

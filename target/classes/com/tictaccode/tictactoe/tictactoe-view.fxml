@@ -113,8 +113,11 @@
                 focusTraversable="false" onMouseClicked="#placeMove" />
         <Button fx:id="spot9" styleClass="gameButton" layoutX="300" layoutY="290" prefWidth="85" prefHeight="85"
                 focusTraversable="false" onMouseClicked="#placeMove" />
+        <Button fx:id="backButton" onMouseClicked="#backMove" layoutX="20" layoutY="20" prefWidth="70" prefHeight="50"
+                styleClass="backButton" text="Back" />
     </Group>
 
     <!-- displays the current version of the application -->
     <Text fx:id="versionLabel" layoutX="5" layoutY="490" />
 </Pane>
+
