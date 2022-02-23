@@ -2,11 +2,9 @@ package com.tictaccode.tictactoe;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -53,6 +51,8 @@ public class TicTacToeController {
     private Board board;
     
     private Stage stage;
+    
+    private Scene welcomeScene;
     
     /** An integer variable that holds count on which turn number it is */
     private int turnCount;
@@ -111,6 +111,11 @@ public class TicTacToeController {
     
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+    
+    
+    public void setWelcomeScene(Scene scene) {
+        welcomeScene = scene;
     }
     
     
@@ -198,11 +203,6 @@ public class TicTacToeController {
      * @param mouseEvent holds all the mouse event information when the method is called by the UI.
      */
     public void backMove(MouseEvent mouseEvent) throws IOException {
-
-        // opening welcome stage after back button clicked event
-        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("welcome-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), backButton.getScene().getWidth(), backButton.getScene().getHeight());
-        stage.setTitle("Welcome TicTacToe Game");
-        stage.setScene(scene);
+        stage.setScene(welcomeScene);
     }
 }
