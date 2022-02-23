@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TicTacToeApplication extends Application {
     
     /** Stores the current version of the application. */
-    public static final String VERSION = "0.2-SNAPSHOT";
+    public static final String VERSION = "0.3-SNAPSHOT";
     
     
     /**
@@ -23,7 +23,16 @@ public class TicTacToeApplication extends Application {
      * @throws IOException is thrown when the fxml file for the scene is unable to load.
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws Exception {
+        Scene scene=Welcome.getScene(primaryStage);
+        primaryStage.setTitle("Tic Tac Toe");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+
+    }
+
+    public static void startSinglePlayerGame(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 500, 500);
         primaryStage.setTitle("Tic Tac Toe");
@@ -31,7 +40,6 @@ public class TicTacToeApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-    
     
     /**
      * Launches the tic-tac-toe application.
