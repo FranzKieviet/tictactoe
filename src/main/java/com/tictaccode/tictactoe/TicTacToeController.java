@@ -1,26 +1,38 @@
 package com.tictaccode.tictactoe;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
 public class TicTacToeController {
-    
-    /** Javafx text element retrieved from the fxml file. */
+
+    /**
+     * Javafx text element retrieved from the fxml file.
+     */
     @FXML
     Text versionLabel;
-    
-    /** Javafx button elements retrieved from the fxml file. */
+
+    /**
+     * Javafx button elements retrieved from the fxml file.
+     */
     @FXML
-    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9;
-    
-    /** Javafx line elements retrieved from the fxml file. */
+    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, backButton;
+
+    /**
+     * Javafx line elements retrieved from the fxml file.
+     */
     @FXML
     Line x1L, x1R, x2L, x2R, x3L, x3R, x4L, x4R, x5L, x5R, x6L, x6R, x7L, x7R, x8L, x8R, x9L, x9R;
     
@@ -39,10 +51,11 @@ public class TicTacToeController {
     
     /** A board object that is used to keep track of the positions of pieces on the board and handle game logic. */
     private Board board;
-
+    
+    private Stage stage;
+    
     /** An integer variable that holds count on which turn number it is */
     private int turnCount;
-
 
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -93,6 +106,11 @@ public class TicTacToeController {
 
         // initializes the turn count
         turnCount = 1;
+    }
+    
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
     
     
@@ -172,5 +190,19 @@ public class TicTacToeController {
         // enables all game buttons in the spots that are empty on the game board
         enableAvailableGameButtons();
 
+    }
+
+    /**
+     * The backMove() method allows the user to open welcome screen
+     *
+     * @param mouseEvent holds all the mouse event information when the method is called by the UI.
+     */
+    public void backMove(MouseEvent mouseEvent) throws IOException {
+
+        // opening welcome stage after back button clicked event
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("welcome-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), backButton.getScene().getWidth(), backButton.getScene().getHeight());
+        stage.setTitle("Welcome TicTacToe Game");
+        stage.setScene(scene);
     }
 }

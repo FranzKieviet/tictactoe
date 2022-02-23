@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TicTacToeApplication extends Application {
     
     /** Stores the current version of the application. */
-    public static final String VERSION = "0.2-SNAPSHOT";
+    public static final String VERSION = "0.4-SNAPSHOT";
     
     
     /**
@@ -29,6 +29,10 @@ public class TicTacToeApplication extends Application {
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+        
+        TicTacToeController controller = fxmlLoader.getController();
+        controller.setStage(primaryStage);
+        
         primaryStage.show();
     }
     
