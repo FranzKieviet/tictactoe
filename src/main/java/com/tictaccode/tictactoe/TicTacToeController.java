@@ -54,7 +54,9 @@ public class TicTacToeController {
     
     private Stage stage;
     
-    
+    /** An integer variable that holds count on which turn number it is */
+    private int turnCount;
+
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
      * Initializes all private data members and sets up the initial tic-tac-toe board.
@@ -101,6 +103,9 @@ public class TicTacToeController {
         
         // initializes the board
         board = new Board(this);
+
+        // initializes the turn count
+        turnCount = 1;
     }
     
     
@@ -142,10 +147,12 @@ public class TicTacToeController {
     public void placeMove(MouseEvent mouseEvent) {
         // disables all game buttons while placing the move
         disableGameButtons();
-    
-        // TODO: Change the PlayType to an alternating type per player
-        // sets what type of piece the user is playing
-        PlayType playType = PlayType.X;
+
+        // sets what type of piece the user is playing based on the turn count
+        PlayType playType;
+        if (turnCount % 2 == 1) playType = PlayType.X;
+        else playType = PlayType.O;
+
         
         // gets the id number of the button in order to get the position of the button on the game board
         Button b = (Button) mouseEvent.getSource();
@@ -176,9 +183,13 @@ public class TicTacToeController {
         }
         
         // TODO: Check if someone won the game here
-        
+
+        // move onto the next turn
+        ++turnCount;
+
         // enables all game buttons in the spots that are empty on the game board
         enableAvailableGameButtons();
+
     }
 
     /**
