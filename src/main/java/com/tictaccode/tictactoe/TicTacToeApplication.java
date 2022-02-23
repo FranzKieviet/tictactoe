@@ -13,8 +13,9 @@ import java.io.IOException;
 public class TicTacToeApplication extends Application {
     
     /** Stores the current version of the application. */
-    public static final String VERSION = "0.3-SNAPSHOT";
+    public static final String VERSION = "0.5-SNAPSHOT";
     
+    private Scene welcomeScene;
     
     /**
      * Loads the initial scene, creates the window, then displays the scene on the window.
@@ -24,20 +25,25 @@ public class TicTacToeApplication extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene=Welcome.getScene(primaryStage);
+        welcomeScene = Welcome.getScene(primaryStage, this);
         primaryStage.setTitle("Tic Tac Toe");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(welcomeScene);
         primaryStage.setResizable(false);
         primaryStage.show();
 
     }
 
-    public static void startSinglePlayerGame(Stage primaryStage) throws Exception{
+    public void startSinglePlayerGame(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 500, 500);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+        
+        TicTacToeController controller = fxmlLoader.getController();
+        controller.setStage(primaryStage);
+        controller.setWelcomeScene(welcomeScene);
+        
         primaryStage.show();
     }
     

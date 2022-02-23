@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 
 public class Welcome{
 
-    public static Scene getScene(Stage primaryStage) throws Exception{
+    public static Scene getScene(Stage primaryStage, TicTacToeApplication app) throws Exception{
         //Create group for all elements:
         Group bkg=new Group();
 
@@ -53,7 +53,7 @@ public class Welcome{
 
         buttonS.setOnAction(e ->  {
             try {
-                TicTacToeApplication.startSinglePlayerGame(primaryStage);
+                app.startSinglePlayerGame(primaryStage);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
