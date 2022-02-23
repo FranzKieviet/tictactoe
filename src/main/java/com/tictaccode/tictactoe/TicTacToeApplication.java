@@ -28,8 +28,12 @@ public class TicTacToeApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 500, 500);
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setMinWidth(500);
+        primaryStage.setMinHeight(500);
         primaryStage.show();
+        
+        TicTacToeController ticTacToeController = fxmlLoader.getController();
+        ticTacToeController.startUI();
     }
     
     

@@ -1,16 +1,29 @@
 package com.tictaccode.tictactoe;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+
 
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
 public class TicTacToeController {
+    
+    /** Javafx pane element retrieved from the fxml file. */
+    @FXML
+    Pane pane;
     
     /** Javafx text element retrieved from the fxml file. */
     @FXML
@@ -20,22 +33,27 @@ public class TicTacToeController {
     @FXML
     Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9;
     
-    /** Javafx line elements retrieved from the fxml file. */
-    @FXML
-    Line x1L, x1R, x2L, x2R, x3L, x3R, x4L, x4R, x5L, x5R, x6L, x6R, x7L, x7R, x8L, x8R, x9L, x9R;
-    
     /** Javafx circle elements retrieved from the fxml file. */
     @FXML
-    Circle o1, o2, o3, o4, o5, o6, o7, o8, o9;
+    Circle spot1Fade, spot2Fade, spot3Fade, spot4Fade, spot5Fade, spot6Fade, spot7Fade, spot8Fade, spot9Fade, gameFade;
+    
+    /** Javafx image view elements retrieved from the fxml file. */
+    @FXML
+    private ImageView boardImage, spot1XImage, spot2XImage, spot3XImage, spot4XImage, spot5XImage, spot6XImage,
+            spot7XImage, spot8XImage, spot9XImage, spot1OImage, spot2OImage, spot3OImage, spot4OImage, spot5OImage,
+            spot6OImage, spot7OImage, spot8OImage, spot9OImage;
     
     /** Stores all the game buttons from the ui for ease of use. */
     private Button[] gameButtons;
     
-    /** Stores all the X pieces. */
-    private XPiece[] xPieces;
+    /** Stores all the game button image views for the ui for ease of use. */
+    public ImageView[] gameButtonXImages, gameButtonOImages;
     
-    /** Stores all the O pieces. */
-    private OPiece[] oPieces;
+    /** Stores all the game button image fades for the ui for ease of use. */
+    public Circle[] imageFades;
+    
+    /** Stores the x and o images used on the ui. */
+    private Image xImage, oImage;
     
     /** A board object that is used to keep track of the positions of pieces on the board and handle game logic. */
     private Board board;
@@ -61,32 +79,237 @@ public class TicTacToeController {
         gameButtons[7] = spot8;
         gameButtons[8] = spot9;
         
-        // initializes the xPieces array
-        xPieces = new XPiece[9];
-        xPieces[0] = new XPiece("x1", x1L, x1R);
-        xPieces[1] = new XPiece("x2", x2L, x2R);
-        xPieces[2] = new XPiece("x3", x3L, x3R);
-        xPieces[3] = new XPiece("x4", x4L, x4R);
-        xPieces[4] = new XPiece("x5", x5L, x5R);
-        xPieces[5] = new XPiece("x6", x6L, x6R);
-        xPieces[6] = new XPiece("x7", x7L, x7R);
-        xPieces[7] = new XPiece("x8", x8L, x8R);
-        xPieces[8] = new XPiece("x9", x9L, x9R);
+        // initializes the gameButtonXImages array
+        gameButtonXImages = new ImageView[9];
+        gameButtonXImages[0] = spot1XImage;
+        gameButtonXImages[1] = spot2XImage;
+        gameButtonXImages[2] = spot3XImage;
+        gameButtonXImages[3] = spot4XImage;
+        gameButtonXImages[4] = spot5XImage;
+        gameButtonXImages[5] = spot6XImage;
+        gameButtonXImages[6] = spot7XImage;
+        gameButtonXImages[7] = spot8XImage;
+        gameButtonXImages[8] = spot9XImage;
+    
+        // initializes the gameButtonXImages array
+        gameButtonOImages = new ImageView[9];
+        gameButtonOImages[0] = spot1OImage;
+        gameButtonOImages[1] = spot2OImage;
+        gameButtonOImages[2] = spot3OImage;
+        gameButtonOImages[3] = spot4OImage;
+        gameButtonOImages[4] = spot5OImage;
+        gameButtonOImages[5] = spot6OImage;
+        gameButtonOImages[6] = spot7OImage;
+        gameButtonOImages[7] = spot8OImage;
+        gameButtonOImages[8] = spot9OImage;
+    
+        xImage = new Image(TicTacToeController.class.getResource("images/X.png").toString());
+        oImage = new Image(TicTacToeController.class.getResource("images/O.png").toString());
         
-        // initializes the oPieces array
-        oPieces = new OPiece[9];
-        oPieces[0] = new OPiece("o1", o1);
-        oPieces[1] = new OPiece("o2", o2);
-        oPieces[2] = new OPiece("o3", o3);
-        oPieces[3] = new OPiece("o4", o4);
-        oPieces[4] = new OPiece("o5", o5);
-        oPieces[5] = new OPiece("o6", o6);
-        oPieces[6] = new OPiece("o7", o7);
-        oPieces[7] = new OPiece("o8", o8);
-        oPieces[8] = new OPiece("o9", o9);
+        // preserves the image size and sets images
+        for (int i = 0; i < 9; ++i) {
+            gameButtonXImages[i].setPreserveRatio(true);
+            gameButtonOImages[i].setPreserveRatio(true);
+            gameButtonXImages[i].setImage(xImage);
+            gameButtonOImages[i].setImage(oImage);
+            gameButtonXImages[i].setCache(true);
+            gameButtonOImages[i].setCache(true);
+            gameButtonXImages[i].setSmooth(true);
+            gameButtonOImages[i].setSmooth(true);
+        }
+        
+        
+        // initializes the imageFades array
+        imageFades = new Circle[9];
+        imageFades[0] = spot1Fade;
+        imageFades[1] = spot2Fade;
+        imageFades[2] = spot3Fade;
+        imageFades[3] = spot4Fade;
+        imageFades[4] = spot5Fade;
+        imageFades[5] = spot6Fade;
+        imageFades[6] = spot7Fade;
+        imageFades[7] = spot8Fade;
+        imageFades[8] = spot9Fade;
         
         // initializes the board
         board = new Board(this);
+        
+        boardImage.setPreserveRatio(true);
+        boardImage.setImage(new Image(TicTacToeController.class.getResource("images/Board.png").toString()));
+    
+        pane.widthProperty().addListener((observableValue, number, t1) -> {
+            double sceneWidth = boardImage.getScene().getWidth();
+            double sceneHeight = boardImage.getScene().getHeight();
+            
+            boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
+    
+            double boardImageSize = boardImage.getFitWidth();
+            
+            boardImage.setX(sceneWidth / 2 - boardImage.getFitWidth() / 2);
+            boardImage.setY(sceneHeight / 2 - boardImage.getFitWidth() / 2);
+    
+            gameFade.setCenterX(sceneWidth / 2);
+            gameFade.setCenterY(sceneHeight / 2);
+    
+            double boardX = boardImage.getX();
+            double boardY = boardImage.getY();
+    
+            for (int y = 0; y < Board.BOARD_SIZE; ++y) {
+                for (int x = 0; x < Board.BOARD_SIZE; ++x) {
+                    gameButtons[x + y * 3].setLayoutX(boardX + boardImageSize / 3 * x);
+                    gameButtons[x + y * 3].setLayoutY(boardY + boardImageSize / 3 * y);
+                    gameButtons[x + y * 3].setPrefWidth(boardImageSize / 3);
+                    gameButtons[x + y * 3].setPrefHeight(boardImageSize / 3);
+            
+                    gameButtonXImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                    gameButtonXImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                    gameButtonXImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                    gameButtonOImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                    gameButtonOImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                    gameButtonOImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                    imageFades[x + y * 3].setCenterX(boardX + boardImageSize / 3 * x + boardImageSize / 6);
+                    imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
+                }
+            }
+        });
+    
+        pane.heightProperty().addListener((observableValue, number, t1) -> {
+            double sceneWidth = boardImage.getScene().getWidth();
+            double sceneHeight = boardImage.getScene().getHeight();
+        
+            boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
+    
+            double boardImageSize = boardImage.getFitWidth();
+            
+            boardImage.setX(sceneWidth / 2 - boardImage.getFitWidth() / 2);
+            boardImage.setY(sceneHeight / 2 - boardImage.getFitWidth() / 2);
+    
+            gameFade.setCenterX(sceneWidth / 2);
+            gameFade.setCenterY(sceneHeight / 2);
+            
+            double boardX = boardImage.getX();
+            double boardY = boardImage.getY();
+    
+            for (int y = 0; y < Board.BOARD_SIZE; ++y) {
+                for (int x = 0; x < Board.BOARD_SIZE; ++x) {
+                    gameButtons[x + y * 3].setLayoutX(boardX + boardImageSize / 3 * x);
+                    gameButtons[x + y * 3].setLayoutY(boardY + boardImageSize / 3 * y);
+                    gameButtons[x + y * 3].setPrefWidth(boardImageSize / 3);
+                    gameButtons[x + y * 3].setPrefHeight(boardImageSize / 3);
+            
+                    gameButtonXImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                    gameButtonXImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                    gameButtonXImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                    gameButtonOImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                    gameButtonOImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                    gameButtonOImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                    imageFades[x + y * 3].setCenterX(boardX + boardImageSize / 3 * x + boardImageSize / 6);
+                    imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
+                }
+            }
+            
+            versionLabel.setY(sceneHeight - 10);
+        });
+    }
+    
+    
+    public void startUI() {
+        double sceneWidth = boardImage.getScene().getWidth();
+        double sceneHeight = boardImage.getScene().getHeight();
+    
+        boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
+    
+        double boardImageSize = boardImage.getFitWidth();
+        
+        boardImage.setX(sceneWidth / 2 - boardImageSize / 2);
+        boardImage.setY(sceneHeight / 2 - boardImageSize / 2);
+    
+        gameFade.setCenterX(sceneWidth / 2);
+        gameFade.setCenterY(sceneHeight / 2);
+    
+        double boardX = boardImage.getX();
+        double boardY = boardImage.getY();
+    
+        for (int y = 0; y < Board.BOARD_SIZE; ++y) {
+            for (int x = 0; x < Board.BOARD_SIZE; ++x) {
+                gameButtons[x + y * 3].setLayoutX(boardX + boardImageSize / 3 * x);
+                gameButtons[x + y * 3].setLayoutY(boardY + boardImageSize / 3 * y);
+                gameButtons[x + y * 3].setPrefWidth(boardImageSize / 3);
+                gameButtons[x + y * 3].setPrefHeight(boardImageSize / 3);
+            
+                gameButtonXImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                gameButtonXImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                gameButtonXImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                gameButtonOImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
+                gameButtonOImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
+                gameButtonOImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
+            
+                imageFades[x + y * 3].setCenterX(boardX + boardImageSize / 3 * x + boardImageSize / 6);
+                imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
+            }
+        }
+        
+        versionLabel.setY(sceneHeight - 10);
+        
+        playBoardAnimation();
+    }
+    
+    
+    public void playBoardAnimation() {
+        disableGameButtons();
+    
+        double width = boardImage.getScene().getWidth();
+        double height = boardImage.getScene().getHeight();
+        gameFade.setCenterX(width / 2);
+        gameFade.setCenterY(height / 2);
+        gameFade.setRadius(width + 100);
+        
+        Thread boardAnimation = new Thread(() -> {
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.millis(500), new KeyValue(gameFade.radiusProperty(),
+                            gameFade.getRadius())),
+                    new KeyFrame(Duration.millis(1000), new KeyValue(gameFade.radiusProperty(), 0))
+            );
+            
+            Platform.runLater(timeline::play);
+        });
+        
+        boardAnimation.start();
+    
+        enableAvailableGameButtons();
+    }
+    
+    
+    public void displayGamePiece(PlayType playType, int spot) {
+        Timeline timeline;
+        
+        imageFades[spot].setRadius(boardImage.getFitWidth() / 6 - 10);
+        
+        if (playType == PlayType.X) {
+            gameButtonXImages[spot].setOpacity(1);
+            timeline = new Timeline(
+                    new KeyFrame(Duration.millis(500), new KeyValue(imageFades[spot].radiusProperty(), 0))
+            );
+        } else {
+            gameButtonOImages[spot].setOpacity(1);
+            timeline = new Timeline(
+                    new KeyFrame(Duration.millis(500), new KeyValue(imageFades[spot].radiusProperty(),
+                            gameButtonOImages[spot].getFitWidth() / 3))
+            );
+        }
+
+        timeline.play();
+        timeline.setOnFinished(e -> {
+            imageFades[spot].setVisible(false);
+    
+            // enables all game buttons in the spots that are empty on the game board
+            enableAvailableGameButtons();
+        });
     }
     
     
@@ -145,20 +368,11 @@ public class TicTacToeController {
         }
         
         // sets the move on the board
-        board.setBoardPosition(x, y, PlayType.X);
+        board.setBoardPosition(x, y, playType);
         
         // displays the move to the user
-        if (playType == PlayType.X) {
-            // ---- Retrieves the correct X piece and displays it on the board ----
-            xPieces[idNum - 1].displayPiece();
-        } else {
-            // ---- Retrieves the correct O piece and displays it on the board ----
-            oPieces[idNum - 1].displayPiece();
-        }
+        displayGamePiece(playType, idNum - 1);
         
         // TODO: Check if someone won the game here
-        
-        // enables all game buttons in the spots that are empty on the game board
-        enableAvailableGameButtons();
     }
 }
