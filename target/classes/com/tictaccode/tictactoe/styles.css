@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: #D0D0D0;
+}
+
+.gameButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
+.xPiece {
+    -fx-stroke: #EE0000;
+}
+
+.oPiece {
+    -fx-stroke: #0000EE;
+    -fx-fill: rgba(0, 0, 0, 0);
+}
+
+#versionLabel {
+    -fx-font-family: Helvetica;
+    -fx-font-weight: bold;
+    -fx-font-alignment: center;
+    -fx-font-size: 12;
+    -fx-fill: #A0A0A0;
+}
+
+.backButton{
+    -fx-background-color: #fff;
+    -fx-font-family: Helvetica;
+    -fx-font-weight: bold;
+    -fx-font-alignment: center;
+    -fx-font-size: 12;
+}
