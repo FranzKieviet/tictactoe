@@ -115,6 +115,10 @@
                 focusTraversable="false" onMouseClicked="#placeMove" />
         <Button fx:id="backButton" onMouseClicked="#backMove" layoutX="20" layoutY="20" prefWidth="70" prefHeight="50"
                 styleClass="backButton" text="Back" />
+
+        <Label fx:id="turn" text="Turn" layoutX="400" layoutY="20"/>
+        <Label fx:id="turnLabel" layoutX="450" layoutY="20"/>
+
     </Group>
 
     <!-- displays the current version of the application -->

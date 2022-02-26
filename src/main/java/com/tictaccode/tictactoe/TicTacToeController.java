@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -37,7 +38,10 @@ public class TicTacToeController {
     /** Javafx circle elements retrieved from the fxml file. */
     @FXML
     Circle o1, o2, o3, o4, o5, o6, o7, o8, o9;
-    
+
+    @FXML
+    Label turnLabel;
+
     /** Stores all the game buttons from the ui for ease of use. */
     private Button[] gameButtons;
     
@@ -57,6 +61,7 @@ public class TicTacToeController {
     /** An integer variable that holds count on which turn number it is */
     private int turnCount;
 
+    private Label labelTurn;
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
      * Initializes all private data members and sets up the initial tic-tac-toe board.
@@ -100,12 +105,16 @@ public class TicTacToeController {
         oPieces[6] = new OPiece("o7", o7);
         oPieces[7] = new OPiece("o8", o8);
         oPieces[8] = new OPiece("o9", o9);
+
+        labelTurn = new Label();
+        labelTurn = turnLabel;
         
         // initializes the board
         board = new Board(this);
 
         // initializes the turn count
         turnCount = 1;
+        labelTurn.setText("X");
     }
     
     
@@ -155,8 +164,14 @@ public class TicTacToeController {
 
         // sets what type of piece the user is playing based on the turn count
         PlayType playType;
-        if (turnCount % 2 == 1) playType = PlayType.X;
-        else playType = PlayType.O;
+        if (turnCount % 2 == 1) {
+            playType = PlayType.X;
+            labelTurn.setText("O");
+        }
+        else {
+            playType = PlayType.O;
+            labelTurn.setText("X");
+        }
 
         
         // gets the id number of the button in order to get the position of the button on the game board
