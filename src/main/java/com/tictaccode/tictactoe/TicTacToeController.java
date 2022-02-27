@@ -1,9 +1,6 @@
 package com.tictaccode.tictactoe;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -41,7 +39,7 @@ public class TicTacToeController {
     @FXML
     private ImageView boardImage, spot1XImage, spot2XImage, spot3XImage, spot4XImage, spot5XImage, spot6XImage,
             spot7XImage, spot8XImage, spot9XImage, spot1OImage, spot2OImage, spot3OImage, spot4OImage, spot5OImage,
-            spot6OImage, spot7OImage, spot8OImage, spot9OImage;
+            spot6OImage, spot7OImage, spot8OImage, spot9OImage, backgroundPattern;
     
     /** Stores all the game buttons from the ui for ease of use. */
     private Button[] gameButtons;
@@ -58,14 +56,21 @@ public class TicTacToeController {
     /** A board object that is used to keep track of the positions of pieces on the board and handle game logic. */
     private Board board;
     
+    private boolean isXTurn;
+    
+    private Font gameFont;
+    
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
      * Initializes all private data members and sets up the initial tic-tac-toe board.
      */
     public void initialize() {
+        gameFont = Font.loadFont(TicTacToeController.class.getResource("Chalkduster.ttf").toString(), 45);
+        
         // sets the text of the version label based on the current version of the application
         versionLabel.setText(TicTacToeApplication.VERSION);
+        versionLabel.setFont(gameFont);
         
         // initializes the gameButtons array
         gameButtons = new Button[9];
@@ -136,95 +141,46 @@ public class TicTacToeController {
         
         boardImage.setPreserveRatio(true);
         boardImage.setImage(new Image(TicTacToeController.class.getResource("images/Board.png").toString()));
-    
-        pane.widthProperty().addListener((observableValue, number, t1) -> {
-            double sceneWidth = boardImage.getScene().getWidth();
-            double sceneHeight = boardImage.getScene().getHeight();
-            
-            boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
-    
-            double boardImageSize = boardImage.getFitWidth();
-            
-            boardImage.setX(sceneWidth / 2 - boardImage.getFitWidth() / 2);
-            boardImage.setY(sceneHeight / 2 - boardImage.getFitWidth() / 2);
-    
-            gameFade.setCenterX(sceneWidth / 2);
-            gameFade.setCenterY(sceneHeight / 2);
-    
-            double boardX = boardImage.getX();
-            double boardY = boardImage.getY();
-    
-            for (int y = 0; y < Board.BOARD_SIZE; ++y) {
-                for (int x = 0; x < Board.BOARD_SIZE; ++x) {
-                    gameButtons[x + y * 3].setLayoutX(boardX + boardImageSize / 3 * x);
-                    gameButtons[x + y * 3].setLayoutY(boardY + boardImageSize / 3 * y);
-                    gameButtons[x + y * 3].setPrefWidth(boardImageSize / 3);
-                    gameButtons[x + y * 3].setPrefHeight(boardImageSize / 3);
-            
-                    gameButtonXImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
-                    gameButtonXImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
-                    gameButtonXImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
-            
-                    gameButtonOImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
-                    gameButtonOImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
-                    gameButtonOImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
-            
-                    imageFades[x + y * 3].setCenterX(boardX + boardImageSize / 3 * x + boardImageSize / 6);
-                    imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
-                }
-            }
-        });
-    
-        pane.heightProperty().addListener((observableValue, number, t1) -> {
-            double sceneWidth = boardImage.getScene().getWidth();
-            double sceneHeight = boardImage.getScene().getHeight();
         
-            boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
+        backgroundPattern.setPreserveRatio(true);
+        backgroundPattern.setImage(
+                new Image(TicTacToeController.class.getResource("images/BackgroundPattern.png").toString()));
     
-            double boardImageSize = boardImage.getFitWidth();
-            
-            boardImage.setX(sceneWidth / 2 - boardImage.getFitWidth() / 2);
-            boardImage.setY(sceneHeight / 2 - boardImage.getFitWidth() / 2);
-    
-            gameFade.setCenterX(sceneWidth / 2);
-            gameFade.setCenterY(sceneHeight / 2);
-            
-            double boardX = boardImage.getX();
-            double boardY = boardImage.getY();
-    
-            for (int y = 0; y < Board.BOARD_SIZE; ++y) {
-                for (int x = 0; x < Board.BOARD_SIZE; ++x) {
-                    gameButtons[x + y * 3].setLayoutX(boardX + boardImageSize / 3 * x);
-                    gameButtons[x + y * 3].setLayoutY(boardY + boardImageSize / 3 * y);
-                    gameButtons[x + y * 3].setPrefWidth(boardImageSize / 3);
-                    gameButtons[x + y * 3].setPrefHeight(boardImageSize / 3);
-            
-                    gameButtonXImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
-                    gameButtonXImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
-                    gameButtonXImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
-            
-                    gameButtonOImages[x + y * 3].setX(boardX + boardImageSize / 3 * x + 25);
-                    gameButtonOImages[x + y * 3].setY(boardY + boardImageSize / 3 * y + 25);
-                    gameButtonOImages[x + y * 3].setFitWidth(boardImageSize / 3 - 50);
-            
-                    imageFades[x + y * 3].setCenterX(boardX + boardImageSize / 3 * x + boardImageSize / 6);
-                    imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
-                }
-            }
-            
-            versionLabel.setY(sceneHeight - 10);
-        });
+        isXTurn = false;
+        
+        pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
+        pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
     }
     
     
     public void startUI() {
+        updateUI();
+    
+        double sceneWidth = boardImage.getScene().getWidth();
+        double sceneHeight = boardImage.getScene().getHeight();
+        
+        TranslateTransition backgroundAnimation = new TranslateTransition(Duration.seconds(150), backgroundPattern);
+        backgroundAnimation.setFromX(-sceneWidth);
+        backgroundAnimation.setFromY(-sceneHeight);
+        backgroundAnimation.setToX(0);
+        backgroundAnimation.setToY(0);
+        backgroundAnimation.setAutoReverse(true);
+        backgroundAnimation.setCycleCount(Animation.INDEFINITE);
+        backgroundAnimation.play();
+        
+        playBoardAnimation();
+    }
+    
+    
+    public void updateUI() {
         double sceneWidth = boardImage.getScene().getWidth();
         double sceneHeight = boardImage.getScene().getHeight();
     
         boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
+        backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
     
         double boardImageSize = boardImage.getFitWidth();
-        
+    
         boardImage.setX(sceneWidth / 2 - boardImageSize / 2);
         boardImage.setY(sceneHeight / 2 - boardImageSize / 2);
     
@@ -253,10 +209,8 @@ public class TicTacToeController {
                 imageFades[x + y * 3].setCenterY(boardY + boardImageSize / 3 * y + boardImageSize / 6);
             }
         }
-        
+    
         versionLabel.setY(sceneHeight - 10);
-        
-        playBoardAnimation();
     }
     
     
@@ -293,12 +247,12 @@ public class TicTacToeController {
         if (playType == PlayType.X) {
             gameButtonXImages[spot].setOpacity(1);
             timeline = new Timeline(
-                    new KeyFrame(Duration.millis(500), new KeyValue(imageFades[spot].radiusProperty(), 0))
+                    new KeyFrame(Duration.millis(100), new KeyValue(imageFades[spot].radiusProperty(), 0))
             );
         } else {
             gameButtonOImages[spot].setOpacity(1);
             timeline = new Timeline(
-                    new KeyFrame(Duration.millis(500), new KeyValue(imageFades[spot].radiusProperty(),
+                    new KeyFrame(Duration.millis(100), new KeyValue(imageFades[spot].radiusProperty(),
                             gameButtonOImages[spot].getFitWidth() / 3))
             );
         }
@@ -349,7 +303,8 @@ public class TicTacToeController {
     
         // TODO: Change the PlayType to an alternating type per player
         // sets what type of piece the user is playing
-        PlayType playType = PlayType.X;
+        isXTurn = !isXTurn;
+        PlayType playType = (isXTurn ? PlayType.X : PlayType.O);
         
         // gets the id number of the button in order to get the position of the button on the game board
         Button b = (Button) mouseEvent.getSource();
