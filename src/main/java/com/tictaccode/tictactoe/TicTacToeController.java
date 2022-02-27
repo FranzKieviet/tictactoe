@@ -3,33 +3,38 @@ package com.tictaccode.tictactoe;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
+import javafx.stage.Stage;
 
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
 public class TicTacToeController {
-    
     /** Javafx pane element retrieved from the fxml file. */
     @FXML
     Pane pane;
     
-    /** Javafx text element retrieved from the fxml file. */
+    /**
+     * Javafx text element retrieved from the fxml file.
+     */
     @FXML
     Text versionLabel;
     
-    /** Javafx button elements retrieved from the fxml file. */
+    /**
+     * Javafx button elements retrieved from the fxml file.
+     */
     @FXML
-    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9;
+    Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, backButton;
     
     /** Javafx circle elements retrieved from the fxml file. */
     @FXML
@@ -41,7 +46,12 @@ public class TicTacToeController {
             spot7XImage, spot8XImage, spot9XImage, spot1OImage, spot2OImage, spot3OImage, spot4OImage, spot5OImage,
             spot6OImage, spot7OImage, spot8OImage, spot9OImage, backgroundPattern;
     
-    /** Stores all the game buttons from the ui for ease of use. */
+    @FXML
+    Label turnLabel;
+    
+    /**
+     * Stores all the game buttons from the ui for ease of use.
+     */
     private Button[] gameButtons;
     
     /** Stores all the game button image views for the ui for ease of use. */
@@ -53,13 +63,33 @@ public class TicTacToeController {
     /** Stores the x and o images used on the ui. */
     private Image xImage, oImage;
     
-    /** A board object that is used to keep track of the positions of pieces on the board and handle game logic. */
+    /**
+     * Stores all the X pieces.
+     */
+//    private XPiece[] xPieces;
+    
+    /**
+     * Stores all the O pieces.
+     */
+//    private OPiece[] oPieces;
+    
+    /**
+     * A board object that is used to keep track of the positions of pieces on the board and handle game logic.
+     */
     private Board board;
     
     private boolean isXTurn;
     
     private Font gameFont;
     
+    private Stage stage;
+    
+    private Scene welcomeScene;
+    
+    /**
+     * An integer variable that holds count on which turn number it is
+     */
+    private int turnCount;
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -147,6 +177,10 @@ public class TicTacToeController {
                 new Image(TicTacToeController.class.getResource("images/BackgroundPattern.png").toString()));
     
         isXTurn = false;
+    
+        // initializes the turn count
+        turnCount = 1;
+        turnLabel.setText("X");
         
         pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
         pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
@@ -239,7 +273,7 @@ public class TicTacToeController {
     }
     
     
-    public void displayGamePiece(PlayType playType, int spot) {
+    public void showGamePiece(PlayType playType, int spot) {
         Timeline timeline;
         
         imageFades[spot].setRadius(boardImage.getFitWidth() / 6 - 10);
@@ -261,9 +295,35 @@ public class TicTacToeController {
         timeline.setOnFinished(e -> {
             imageFades[spot].setVisible(false);
     
-            // enables all game buttons in the spots that are empty on the game board
-            enableAvailableGameButtons();
+            // determines whether x won, o won, there was a draw, or to continue the game
+            switch (board.checkState()) {
+                case X_WINNER:
+                    turnLabel.setText("X WIN");
+                    break;
+                case O_WINNER:
+                    turnLabel.setText("O WIN");
+                    break;
+                case DRAW:
+                    turnLabel.setText("DRAW");
+                    break;
+                default:
+                    // move onto the next turn
+                    ++turnCount;
+            
+                    // enables all game buttons in the spots that are empty on the game board
+                    enableAvailableGameButtons();
+            }
         });
+    }
+    
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+    
+    
+    public void setWelcomeScene(Scene scene) {
+        welcomeScene = scene;
     }
     
     
@@ -300,11 +360,16 @@ public class TicTacToeController {
     public void placeMove(MouseEvent mouseEvent) {
         // disables all game buttons while placing the move
         disableGameButtons();
-    
-        // TODO: Change the PlayType to an alternating type per player
-        // sets what type of piece the user is playing
-        isXTurn = !isXTurn;
-        PlayType playType = (isXTurn ? PlayType.X : PlayType.O);
+        
+        // sets what type of piece the user is playing based on the turn count
+        PlayType playType;
+        if (turnCount % 2 == 1) {
+            playType = PlayType.X;
+            turnLabel.setText("O");
+        } else {
+            playType = PlayType.O;
+            turnLabel.setText("X");
+        }
         
         // gets the id number of the button in order to get the position of the button on the game board
         Button b = (Button) mouseEvent.getSource();
@@ -326,8 +391,14 @@ public class TicTacToeController {
         board.setBoardPosition(x, y, playType);
         
         // displays the move to the user
-        displayGamePiece(playType, idNum - 1);
-        
-        // TODO: Check if someone won the game here
+        showGamePiece(playType, idNum - 1);
+    }
+    
+    /**
+     * The backMove() method allows the user to open welcome screen
+     *
+     */
+    public void backMove() {
+        stage.setScene(welcomeScene);
     }
 }

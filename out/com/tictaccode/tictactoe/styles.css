@@ -1,9 +1,5 @@
 .root {
-    -fx-background-color: #252525;
-}
-
-.gameButtonFade {
-    -fx-fill: #252525;
+    -fx-background-color: #D0D0D0;
 }
 
 .gameButton {
@@ -31,27 +27,5 @@
     -fx-font-weight: bold;
     -fx-font-alignment: center;
     -fx-font-size: 12;
-    -fx-fill: #353535;
-}
-
-#gameFade {
     -fx-fill: #A0A0A0;
-}
-
-.backButton{
-    -fx-background-color: #fff;
-    -fx-font-family: Helvetica;
-    -fx-font-weight: bold;
-    -fx-font-alignment: center;
-    -fx-font-size: 12;
-}
-
-#turnLabel{
-    -fx-font-weight: bold;
-    -fx-font-size: 20;
-}
-
-#turn{
-    -fx-font-weight: bold;
-    -fx-font-size: 20;
 }

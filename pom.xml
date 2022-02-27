@@ -6,7 +6,7 @@
 
     <groupId>com.tictaccode</groupId>
     <artifactId>TicTacToe</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.5.2-SNAPSHOT</version>
     <name>TicTacToe</name>
 
     <properties>
@@ -37,6 +37,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.2</version>
         </dependency>
     </dependencies>
 

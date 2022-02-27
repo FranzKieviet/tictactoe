@@ -3,12 +3,10 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
-
 <?import javafx.scene.image.ImageView?>
-<?import javafx.geometry.Insets?>
+
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.tictaccode.tictactoe.TicTacToeController"
@@ -70,6 +68,12 @@
                 disable="true" />
 
         <ImageView fx:id="boardImage" />
+
+        <Button fx:id="backButton" onMouseClicked="#backMove" layoutX="20" layoutY="20" prefWidth="70" prefHeight="50"
+                styleClass="backButton" text="Back" />
+
+        <Label fx:id="turn" text="Turn" layoutX="300" layoutY="20"/>
+        <Label fx:id="turnLabel" layoutX="350" layoutY="20"/>
     </Group>
 
     <!-- displays the current version of the application -->
@@ -77,3 +81,4 @@
 
     <Circle fx:id="gameFade" />
 </Pane>
+
