@@ -42,6 +42,48 @@ public class Board {
     }
     
     
+    public StateType checkState() {
+        //row control if complete X or O
+        for (int y = 0; y < BOARD_SIZE; ++y) {
+            if (boardSpots[y][0] == boardSpots[y][1] && boardSpots[y][1] == boardSpots[y][2]) {
+                if (boardSpots[y][0] == PlayType.X)
+                    return StateType.X_WINNER;
+                else if (boardSpots[y][0] == PlayType.O)
+                    return StateType.O_WINNER;
+            }
+        }
+        //column control if complete X or O
+        for (int x = 0; x < BOARD_SIZE; ++x) {
+            if (boardSpots[0][x] == boardSpots[1][x] && boardSpots[1][x] == boardSpots[2][x]) {
+                if (boardSpots[0][x] == PlayType.X)
+                    return StateType.X_WINNER;
+                else if (boardSpots[0][x] == PlayType.O)
+                    return StateType.O_WINNER;
+            }
+        }
+        
+        //diagonal control if complete X or O
+        if ((boardSpots[0][0] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][2]) ||
+                (boardSpots[0][2] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][0])) {
+            if (boardSpots[1][1] == PlayType.X)
+                return StateType.X_WINNER;
+            else if (boardSpots[1][1] == PlayType.O)
+                return StateType.O_WINNER;
+        }
+        
+        return (isComplete() ? StateType.DRAW : StateType.CONTINUE);
+    }
+    
+    
+    private boolean isComplete() {
+        for (int y = 0; y < BOARD_SIZE; ++y)
+            for (int x = 0; x < BOARD_SIZE; ++x)
+                if (boardSpots[y][x] == PlayType.NOTHING)
+                    return false;
+        return true;
+    }
+    
+    
     /**
      * Sets a specific position on the board to a certain play type.
      *

@@ -10,74 +10,67 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
 public class TicTacToeController {
-
+    
     /**
      * Javafx text element retrieved from the fxml file.
      */
     @FXML
     Text versionLabel;
-
+    
     /**
      * Javafx button elements retrieved from the fxml file.
      */
     @FXML
     Button spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, backButton;
-
+    
     /**
      * Javafx line elements retrieved from the fxml file.
      */
     @FXML
     Line x1L, x1R, x2L, x2R, x3L, x3R, x4L, x4R, x5L, x5R, x6L, x6R, x7L, x7R, x8L, x8R, x9L, x9R;
-
+    
     /**
      * Javafx circle elements retrieved from the fxml file.
      */
     @FXML
     Circle o1, o2, o3, o4, o5, o6, o7, o8, o9;
-
+    
     @FXML
     Label turnLabel;
-
+    
     /**
      * Stores all the game buttons from the ui for ease of use.
      */
     private Button[] gameButtons;
-
+    
     /**
      * Stores all the X pieces.
      */
     private XPiece[] xPieces;
-
+    
     /**
      * Stores all the O pieces.
      */
     private OPiece[] oPieces;
-
+    
     /**
      * A board object that is used to keep track of the positions of pieces on the board and handle game logic.
      */
     private Board board;
-
+    
     private Stage stage;
-
+    
     private Scene welcomeScene;
-
+    
     /**
      * An integer variable that holds count on which turn number it is
      */
     private int turnCount;
-
-    private Label labelTurn;
-
+    
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
      * Initializes all private data members and sets up the initial tic-tac-toe board.
@@ -85,7 +78,7 @@ public class TicTacToeController {
     public void initialize() {
         // sets the text of the version label based on the current version of the application
         versionLabel.setText(TicTacToeApplication.VERSION);
-
+        
         // initializes the gameButtons array
         gameButtons = new Button[9];
         gameButtons[0] = spot1;
@@ -97,7 +90,7 @@ public class TicTacToeController {
         gameButtons[6] = spot7;
         gameButtons[7] = spot8;
         gameButtons[8] = spot9;
-
+        
         // initializes the xPieces array
         xPieces = new XPiece[9];
         xPieces[0] = new XPiece("x1", x1L, x1R);
@@ -109,7 +102,7 @@ public class TicTacToeController {
         xPieces[6] = new XPiece("x7", x7L, x7R);
         xPieces[7] = new XPiece("x8", x8L, x8R);
         xPieces[8] = new XPiece("x9", x9L, x9R);
-
+        
         // initializes the oPieces array
         oPieces = new OPiece[9];
         oPieces[0] = new OPiece("o1", o1);
@@ -121,29 +114,26 @@ public class TicTacToeController {
         oPieces[6] = new OPiece("o7", o7);
         oPieces[7] = new OPiece("o8", o8);
         oPieces[8] = new OPiece("o9", o9);
-
-        labelTurn = new Label();
-        labelTurn = turnLabel;
-
+        
         // initializes the board
         board = new Board(this);
-
+        
         // initializes the turn count
         turnCount = 1;
-        labelTurn.setText("X");
+        turnLabel.setText("X");
     }
-
-
+    
+    
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
+    
+    
     public void setWelcomeScene(Scene scene) {
         welcomeScene = scene;
     }
-
-
+    
+    
     /**
      * Disables all the game buttons on the tic-tac-toe board.
      */
@@ -151,23 +141,23 @@ public class TicTacToeController {
         for (Button gameButton : gameButtons)
             gameButton.setDisable(true);
     }
-
-
+    
+    
     /**
      * Enables all game buttons on the tic-tac-toe board that are empty (no X or O).
      */
     public void enableAvailableGameButtons() {
         // the boardSpots array holds whether each spot on the tic-tac-toe board has an O, X, or nothing in it
         PlayType[][] boardSpots = board.getBoardSpots();
-
+        
         // traverses through the boardSpots array and enables all buttons in the spot that has nothing in it
         for (int y = 0; y < Board.BOARD_SIZE; ++y)
             for (int x = 0; x < Board.BOARD_SIZE; ++x)
                 if (boardSpots[y][x] == PlayType.NOTHING)
                     gameButtons[x + y * 3].setDisable(false);
     }
-
-
+    
+    
     /**
      * The placeMove() method allows the user to play their move on the tic-tac-toe board and updates all necessary
      * data pertaining to the move.
@@ -177,23 +167,23 @@ public class TicTacToeController {
     public void placeMove(MouseEvent mouseEvent) {
         // disables all game buttons while placing the move
         disableGameButtons();
-
+        
         // sets what type of piece the user is playing based on the turn count
         PlayType playType;
         if (turnCount % 2 == 1) {
             playType = PlayType.X;
-            labelTurn.setText("O");
+            turnLabel.setText("O");
         } else {
             playType = PlayType.O;
-            labelTurn.setText("X");
+            turnLabel.setText("X");
         }
-
-
+        
+        
         // gets the id number of the button in order to get the position of the button on the game board
         Button b = (Button) mouseEvent.getSource();
         String id = b.getId();
         int idNum = Integer.parseInt(id.substring(id.length() - 1));
-
+        
         // gets the x and y position where the move was placed
         int x = 0, y = 0;
         for (int i = 0; i < idNum - 1; ++i) {
@@ -204,15 +194,10 @@ public class TicTacToeController {
                 x = 0;
             }
         }
-
+        
         // sets the move on the board
-        if (turnCount % 2 == 1) {
-            board.setBoardPosition(x, y, PlayType.X);
-        } else {
-            board.setBoardPosition(x, y, PlayType.O);
-        }
-
-
+        board.setBoardPosition(x, y, playType);
+        
         // displays the move to the user
         if (playType == PlayType.X) {
             // ---- Retrieves the correct X piece and displays it on the board ----
@@ -221,82 +206,32 @@ public class TicTacToeController {
             // ---- Retrieves the correct O piece and displays it on the board ----
             oPieces[idNum - 1].displayPiece();
         }
-
-        // TODO: Check if someone won the game here
-
-        // move onto the next turn
-        ++turnCount;
-
-        // enables all game buttons in the spots that are empty on the game board
-        enableAvailableGameButtons();
-        if(checkState().equals(StateType.X_WINNER)){
-            labelTurn.setText("X WIN");
-            disableGameButtons();
-        }
-        else if(checkState().equals(StateType.O_WINNER)){
-            labelTurn.setText("O WIN");
-            disableGameButtons();
-        }
-        else if(checkState().equals(StateType.DRAW)){
-            labelTurn.setText("DRAW");
+        
+        // determines whether x won, o won, there was a draw, or to continue the game
+        switch (board.checkState()) {
+            case X_WINNER:
+                turnLabel.setText("X WIN");
+                break;
+            case O_WINNER:
+                turnLabel.setText("O WIN");
+                break;
+            case DRAW:
+                turnLabel.setText("DRAW");
+                break;
+            default:
+                // move onto the next turn
+                ++turnCount;
+                
+                // enables all game buttons in the spots that are empty on the game board
+                enableAvailableGameButtons();
         }
     }
-
+    
     /**
      * The backMove() method allows the user to open welcome screen
      *
-     * @param mouseEvent holds all the mouse event information when the method is called by the UI.
      */
-    public void backMove(MouseEvent mouseEvent) throws IOException {
+    public void backMove() {
         stage.setScene(welcomeScene);
-    }
-
-    private StateType checkState() {
-
-        //row control if complete X or O
-        for (int y = 0; y < Board.BOARD_SIZE; ++y) {
-            if (board.getBoardSpots()[y][0].name().equals("X") && board.getBoardSpots()[y][1].name().equals("X") && board.getBoardSpots()[y][2].name().equals("X")) {
-                return StateType.X_WINNER;
-            }
-            if (board.getBoardSpots()[y][0].name().equals("O") && board.getBoardSpots()[y][1].name().equals("O") && board.getBoardSpots()[y][2].name().equals("O")) {
-                return StateType.O_WINNER;
-            }
-        }
-        //column control if complete X or O
-        for (int x = 0; x < Board.BOARD_SIZE; ++x) {
-            if (board.getBoardSpots()[0][x].name().equals("X") && board.getBoardSpots()[1][x].name().equals("X") && board.getBoardSpots()[2][x].name().equals("X")) {
-                return StateType.X_WINNER;
-            }
-            if (board.getBoardSpots()[0][x].name().equals("O") && board.getBoardSpots()[1][x].name().equals("O") && board.getBoardSpots()[2][x].name().equals("O")) {
-                return StateType.O_WINNER;
-            }
-        }
-
-        //diagonal control if complete X or O
-        if (board.getBoardSpots()[0][0].name().equals("X") && board.getBoardSpots()[1][1].name().equals("X") && board.getBoardSpots()[2][2].name().equals("X")) {
-            return StateType.X_WINNER;
-        }
-        if (board.getBoardSpots()[0][0].name().equals("O") && board.getBoardSpots()[1][1].name().equals("O") && board.getBoardSpots()[2][2].name().equals("O")) {
-            return StateType.O_WINNER;
-        }
-        if (board.getBoardSpots()[2][0].name().equals("X") && board.getBoardSpots()[1][1].name().equals("X") && board.getBoardSpots()[0][2].name().equals("X")) {
-            return StateType.X_WINNER;
-        }
-        if (board.getBoardSpots()[2][0].name().equals("O") && board.getBoardSpots()[1][1].name().equals("O") && board.getBoardSpots()[0][2].name().equals("O")) {
-            return StateType.O_WINNER;
-        }
-
-        if(isComplete())
-            return StateType.DRAW;
-        return StateType.CONTINUE;
-    }
-
-    private boolean isComplete() {
-
-        for (int y = 0; y < Board.BOARD_SIZE; ++y)
-            for (int x = 0; x < Board.BOARD_SIZE; ++x)
-                if (board.getBoardSpots()[y][x] == PlayType.NOTHING)
-                    return false;
-        return true;
     }
 }
