@@ -13,7 +13,7 @@ import java.io.IOException;
 public class TicTacToeApplication extends Application {
     
     /** Stores the current version of the application. */
-    public static final String VERSION = "0.5-SNAPSHOT";
+    public static final String VERSION = "0.5.2-SNAPSHOT";
     
     private Scene welcomeScene;
     
