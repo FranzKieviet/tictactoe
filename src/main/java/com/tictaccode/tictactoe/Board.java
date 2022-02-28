@@ -42,36 +42,45 @@ public class Board {
     }
     
     
-    public StateType checkState() {
+    public GameOverInfo checkState(GamePiece[] gamePieces) {
         //row control if complete X or O
         for (int y = 0; y < BOARD_SIZE; ++y) {
             if (boardSpots[y][0] == boardSpots[y][1] && boardSpots[y][1] == boardSpots[y][2]) {
                 if (boardSpots[y][0] == PlayType.X)
-                    return StateType.X_WINNER;
+                    return new GameOverInfo(StateType.X_WINNER, LineType.HORIZONTAL, gamePieces[y * 3],
+                            gamePieces[2 + y * 3]);
                 else if (boardSpots[y][0] == PlayType.O)
-                    return StateType.O_WINNER;
+                    return new GameOverInfo(StateType.O_WINNER, LineType.HORIZONTAL, gamePieces[y * 3],
+                            gamePieces[2 + y * 3]);
             }
         }
         //column control if complete X or O
         for (int x = 0; x < BOARD_SIZE; ++x) {
             if (boardSpots[0][x] == boardSpots[1][x] && boardSpots[1][x] == boardSpots[2][x]) {
                 if (boardSpots[0][x] == PlayType.X)
-                    return StateType.X_WINNER;
+                    return new GameOverInfo(StateType.X_WINNER, LineType.VERTICAL, gamePieces[x], gamePieces[x + 6]);
                 else if (boardSpots[0][x] == PlayType.O)
-                    return StateType.O_WINNER;
+                    return new GameOverInfo(StateType.O_WINNER, LineType.VERTICAL, gamePieces[x], gamePieces[x + 6]);
             }
         }
         
-        //diagonal control if complete X or O
-        if ((boardSpots[0][0] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][2]) ||
-                (boardSpots[0][2] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][0])) {
+        //left diagonal control if complete X or O
+        if (boardSpots[0][0] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][2]) {
             if (boardSpots[1][1] == PlayType.X)
-                return StateType.X_WINNER;
+                return new GameOverInfo(StateType.X_WINNER, LineType.LEFT_DIAGONAL, gamePieces[0], gamePieces[8]);
             else if (boardSpots[1][1] == PlayType.O)
-                return StateType.O_WINNER;
+                return new GameOverInfo(StateType.O_WINNER, LineType.LEFT_DIAGONAL, gamePieces[0], gamePieces[8]);
         }
         
-        return (isComplete() ? StateType.DRAW : StateType.CONTINUE);
+        //right diagonal control if complete X or O
+        if (boardSpots[0][2] == boardSpots[1][1] && boardSpots[1][1] == boardSpots[2][0]) {
+            if (boardSpots[1][1] == PlayType.X)
+                return new GameOverInfo(StateType.X_WINNER, LineType.RIGHT_DIAGONAL, gamePieces[2], gamePieces[6]);
+            else if (boardSpots[1][1] == PlayType.O)
+                return new GameOverInfo(StateType.O_WINNER, LineType.RIGHT_DIAGONAL, gamePieces[2], gamePieces[6]);
+        }
+        
+        return new GameOverInfo((isComplete() ? StateType.DRAW : StateType.CONTINUE), LineType.NOTHING);
     }
     
     

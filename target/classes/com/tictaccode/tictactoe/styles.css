@@ -35,7 +35,7 @@
 }
 
 #gameFade {
-    -fx-fill: #A0A0A0;
+    -fx-fill: #707070;
 }
 
 .backButton{
@@ -46,12 +46,7 @@
     -fx-font-size: 12;
 }
 
-#turnLabel{
-    -fx-font-weight: bold;
-    -fx-font-size: 20;
-}
-
-#turn{
-    -fx-font-weight: bold;
-    -fx-font-size: 20;
+#turnLabel {
+    -fx-font-size: 30;
+    -fx-fill: #F0F0F0;
 }
