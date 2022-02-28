@@ -213,6 +213,8 @@ public class TicTacToeController {
             for (int x = 0; x < Board.BOARD_SIZE; ++x)
                 if (boardSpots[y][x] == PlayType.NOTHING)
                     gamePieces[x + y * 3].toggleGameButton(true);
+    
+        turnLabel.setText((turnCount % 2 == 1 ? "X's Turn" : "O's Turn"));
     }
     
     
@@ -227,14 +229,7 @@ public class TicTacToeController {
         disableGameButtons();
         
         // sets what type of piece the user is playing based on the turn count
-        PlayType playType;
-        if (turnCount % 2 == 1) {
-            playType = PlayType.X;
-            turnLabel.setText("O's Turn");
-        } else {
-            playType = PlayType.O;
-            turnLabel.setText("X's Turn");
-        }
+        PlayType playType = (turnCount % 2 == 1 ? PlayType.X : PlayType.O);
         
         // gets the id number of the button in order to get the position of the button on the game board
         Button b = (Button) mouseEvent.getSource();
@@ -280,22 +275,33 @@ public class TicTacToeController {
     
     
     private void showWinner(GameOverInfo gameOverInfo) {
-        double width = boardImage.getScene().getWidth();
-        double height = boardImage.getScene().getHeight();
+        switch (gameOverInfo.getStateType()) {
+            case X_WINNER:
+                turnLabel.setText("X wins!");
+                break;
+            case O_WINNER:
+                turnLabel.setText("O wins!");
+                break;
+            default:
+                turnLabel.setText("Cat's game!");
+        }
         
-        gameFade.setCenterX(width / 2);
-        gameFade.setCenterY(height / 2);
-        gameFade.setRadius(1);
-        
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(1000), new KeyValue(gameFade.radiusProperty(), 1)),
-                new KeyFrame(Duration.millis(1500), new KeyValue(gameFade.radiusProperty(), Math.max(width, height) / 2 + 250))
-        );
-        
-        timeline.play();
-        timeline.setOnFinished(e -> {
-        
-        });
+//        double width = boardImage.getScene().getWidth();
+//        double height = boardImage.getScene().getHeight();
+//
+//        gameFade.setCenterX(width / 2);
+//        gameFade.setCenterY(height / 2);
+//        gameFade.setRadius(1);
+//
+//        Timeline timeline = new Timeline(
+//                new KeyFrame(Duration.millis(1000), new KeyValue(gameFade.radiusProperty(), 1)),
+//                new KeyFrame(Duration.millis(1500), new KeyValue(gameFade.radiusProperty(), Math.max(width, height) / 2 + 250))
+//        );
+//
+//        timeline.play();
+//        timeline.setOnFinished(e -> {
+//
+//        });
     }
     
     public void doGameOver(GameOverInfo gameOverInfo) {

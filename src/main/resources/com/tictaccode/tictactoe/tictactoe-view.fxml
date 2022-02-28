@@ -138,10 +138,5 @@
     <Text fx:id="versionLabel" x="5" />
 
     <Circle fx:id="gameFade" />
-
-    <Text fx:id="winLabel" textAlignment="CENTER" y="250" />
-    <Button fx:id="playAgainButton" styleClass="gameButton" disable="true" />
-    <Button fx:id="backButton2" styleClass="gameButton" disable="true" />
-
 </Pane>
 
