@@ -271,6 +271,7 @@ public class TicTacToeController {
      */
     public void backMove() {
         stage.setScene(welcomeScene);
+        stage.setResizable(true);
     }
     
     
@@ -305,6 +306,8 @@ public class TicTacToeController {
     }
     
     public void doGameOver(GameOverInfo gameOverInfo) {
+        stage.setResizable(false);
+        
         if (gameOverInfo.getStateType() != StateType.DRAW) {
             Timeline timeline;
             
