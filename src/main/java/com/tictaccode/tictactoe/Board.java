@@ -27,7 +27,7 @@ public class Board {
         // creates a new board
         newBoard();
     }
-    
+
     
     /**
      * Creates a new board that is empty (PlayType.NOTHING).
@@ -122,8 +122,8 @@ public class Board {
         if(maximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             //Go through all possible moves
-            for(int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++i) {
+            for(int i = 0; i < grid.BOARD_SIZE; ++i) {
+                for (int j = 0; j < grid.BOARD_SIZE; ++j) {
                     if(boardSpots[i][j] == PlayType.NOTHING) {
                         //Play move on new grid and pass it into child
                         Board newGrid = grid;
@@ -141,11 +141,11 @@ public class Board {
         else {
             int minEval = Integer.MAX_VALUE;
             //Go through all possible moves
-            for(int i = 0; i < 3; ++i) {
-                for(int j = 0; j < 3; ++j) {
+            for(int i = 0; i < BOARD_SIZE; ++i) {
+                for(int j = 0; j < BOARD_SIZE; ++j) {
                     if(boardSpots[i][j] == PlayType.NOTHING) {
                         //Play move on new grid and pass it into child
-                        Board newGrid = grid;
+                        Board newGrid = grid;   //TODO: Make copy constructor for Board
                         newGrid.setBoardPosition(i, j, PlayType.X);
                         int eval = minimax(newGrid,scoreX, scoreO, true);
                         minEval = Math.min(minEval, eval);
