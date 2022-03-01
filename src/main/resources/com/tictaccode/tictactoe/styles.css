@@ -44,18 +44,10 @@
 }
 
 .fade {
-    -fx-fill: #606060;
+    -fx-fill: #505050;
 }
 
-.backButton{
-    -fx-background-color: #fff;
-    -fx-font-family: Helvetica;
-    -fx-font-weight: bold;
-    -fx-font-alignment: center;
-    -fx-font-size: 12;
-}
-
-#title {
+.title {
     -fx-font-size: 60;
     -fx-fill: #F0F0F0;
 }

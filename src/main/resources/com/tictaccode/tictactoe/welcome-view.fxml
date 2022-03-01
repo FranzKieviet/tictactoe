@@ -16,11 +16,14 @@
         <Image url="@images/BackgroundPattern2.png" />
     </ImageView>
 
-    <Text fx:id="title" text="Tic Tac Toe" />
+    <Text fx:id="title" styleClass="title" text="Tic Tac Toe" />
 
-    <Button fx:id="singleplayerButton" styleClass="uiButton" text="Singleplayer" focusTraversable="false" onMouseClicked="#goToSingleplayer" />
-    <Button fx:id="localMultiplayerButton" styleClass="uiButton" text="Local Multiplayer" focusTraversable="false" onMouseClicked="#goToLocalMultiplayer" />
-    <Button fx:id="onlineMultiplayerButton" styleClass="uiButton" text="Online Multiplayer" focusTraversable="false" onMouseClicked="#goToOnlineMultiplayer" />
+    <Button fx:id="singleplayerButton" styleClass="uiButton" text="Singleplayer" focusTraversable="false"
+            onMouseClicked="#goToSingleplayer" />
+    <Button fx:id="localMultiplayerButton" styleClass="uiButton" text="Local Multiplayer" focusTraversable="false"
+            onMouseClicked="#goToLocalMultiplayer" />
+    <Button fx:id="onlineMultiplayerButton" styleClass="uiButton" text="Online Multiplayer" focusTraversable="false"
+            onMouseClicked="#goToOnlineMultiplayer" />
     <Button fx:id="exitButton" styleClass="uiButton" text="Exit" focusTraversable="false" onMouseClicked="#exitGame" />
 
     <!-- displays the current version of the application -->

@@ -66,11 +66,27 @@ public class TicTacToeApplication extends Application {
         TicTacToeController ticTacToeController = fxmlLoader.getController();
         ticTacToeController.setApplication(this);
         ticTacToeController.setStage(primaryStage);
+        ticTacToeController.setGameType(GameType.LOCAL_MULTIPLAYER);
         
         primaryStage.setScene(ticTacToeScene);
         primaryStage.show();
         ticTacToeController.startUI();
         ticTacToeController.fadeIn();
+    }
+    
+    public void startResultsScreen(Stage primaryStage, GameOverInfo gameOverInfo, GameType gameType) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("results-view.fxml"));
+        Scene resultsScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+    
+        ResultsController resultsController = fxmlLoader.getController();
+        resultsController.setApplication(this);
+        resultsController.setStage(primaryStage);
+        resultsController.setGameOverInfo(gameOverInfo);
+        resultsController.setGameType(gameType);
+    
+        primaryStage.setScene(resultsScene);
+        primaryStage.show();
+        resultsController.startUI();
     }
     
     /**

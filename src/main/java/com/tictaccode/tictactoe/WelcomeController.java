@@ -43,17 +43,17 @@ public class WelcomeController extends Controller {
         pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
         pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
         
-        singleplayerButton.setOnMouseEntered(e -> uiButtonHover(singleplayerButton));
-        singleplayerButton.setOnMouseExited(e -> uiButtonIdle(singleplayerButton));
+        singleplayerButton.setOnMouseEntered(e -> Animations.uiButtonHover(singleplayerButton, 35));
+        singleplayerButton.setOnMouseExited(e -> Animations.uiButtonIdle(singleplayerButton, 30));
     
-        localMultiplayerButton.setOnMouseEntered(e -> uiButtonHover(localMultiplayerButton));
-        localMultiplayerButton.setOnMouseExited(e -> uiButtonIdle(localMultiplayerButton));
+        localMultiplayerButton.setOnMouseEntered(e -> Animations.uiButtonHover(localMultiplayerButton, 35));
+        localMultiplayerButton.setOnMouseExited(e -> Animations.uiButtonIdle(localMultiplayerButton, 30));
     
-        onlineMultiplayerButton.setOnMouseEntered(e -> uiButtonHover(onlineMultiplayerButton));
-        onlineMultiplayerButton.setOnMouseExited(e -> uiButtonIdle(onlineMultiplayerButton));
+        onlineMultiplayerButton.setOnMouseEntered(e -> Animations.uiButtonHover(onlineMultiplayerButton, 35));
+        onlineMultiplayerButton.setOnMouseExited(e -> Animations.uiButtonIdle(onlineMultiplayerButton, 30));
     
-        exitButton.setOnMouseEntered(e -> uiButtonHover(exitButton));
-        exitButton.setOnMouseExited(e -> uiButtonIdle(exitButton));
+        exitButton.setOnMouseEntered(e -> Animations.uiButtonHover(exitButton, 35));
+        exitButton.setOnMouseExited(e -> Animations.uiButtonIdle(exitButton, 30));
     }
     
     
@@ -90,10 +90,6 @@ public class WelcomeController extends Controller {
     
         fade.setCenterX(sceneWidth / 2);
         fade.setCenterY(sceneHeight / 2);
-    
-        System.out.println("BEFORE:\nFont Size: " + singleplayerButton.getFont().getSize());
-        System.out.println("Width: " + singleplayerButton.getWidth() + "  Height: " + singleplayerButton.getHeight());
-        System.out.println("X: " + singleplayerButton.getLayoutX() + "  Y: " + singleplayerButton.getLayoutY());
         
         singleplayerButton.setFont(
                 new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
@@ -125,20 +121,6 @@ public class WelcomeController extends Controller {
         exitButton.setLayoutY(onlineMultiplayerButton.getLayoutY() + onlineMultiplayerButton.getPrefHeight() + 20);
     
         versionLabel.setY(sceneHeight - 10);
-    }
-    
-    
-    public void uiButtonHover(Button button) {
-        double sceneWidth = backgroundPattern.getScene().getWidth();
-        double sceneHeight = backgroundPattern.getScene().getHeight();
-        button.setFont(new Font(Fonts.GAME_FONT.getFamily(), 35 * Math.min(sceneWidth, sceneHeight) / 600));
-    }
-    
-    
-    public void uiButtonIdle(Button button) {
-        double sceneWidth = backgroundPattern.getScene().getWidth();
-        double sceneHeight = backgroundPattern.getScene().getHeight();
-        button.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
     }
     
     

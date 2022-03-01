@@ -4,7 +4,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 public class Animations {
@@ -38,5 +40,19 @@ public class Animations {
         );
         
         return timeline;
+    }
+    
+    
+    public static void uiButtonHover(Button button, double size) {
+        double sceneWidth = button.getScene().getWidth();
+        double sceneHeight = button.getScene().getHeight();
+        button.setFont(new Font(Fonts.GAME_FONT.getFamily(), size * Math.min(sceneWidth, sceneHeight) / 600));
+    }
+    
+    
+    public static void uiButtonIdle(Button button, double size) {
+        double sceneWidth = button.getScene().getWidth();
+        double sceneHeight = button.getScene().getHeight();
+        button.setFont(new Font(Fonts.GAME_FONT.getFamily(), size * Math.min(sceneWidth, sceneHeight) / 600));
     }
 }

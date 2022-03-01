@@ -56,6 +56,8 @@ public class TicTacToeController extends Controller {
      */
     private int turnCount;
     
+    private GameType gameType;
+    
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -85,19 +87,19 @@ public class TicTacToeController extends Controller {
         // initializes the turn count
         turnCount = 1;
         turnLabel.setText("X's Turn");
+    
+        backButton.setFont(Fonts.GAME_FONT);
         
         pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
         pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
+    
+        backButton.setOnMouseEntered(e -> Animations.uiButtonHover(backButton, 25));
+        backButton.setOnMouseExited(e -> Animations.uiButtonIdle(backButton, 20));
     }
     
     
     @Override
     public void startUI() {
-        for (GamePiece gamePiece : gamePieces) {
-            gamePiece.hidePiece();
-            gamePiece.setPiece(PlayType.NOTHING);
-        }
-        
         updateUI();
     
         double width = gameFade.getScene().getWidth();
@@ -157,6 +159,12 @@ public class TicTacToeController extends Controller {
                         pieceSize);
             }
         }
+    
+        backButton.setFont(
+                new Font(Fonts.GAME_FONT.getFamily(), 20 * Math.min(sceneWidth, sceneHeight) / 600));
+        backButton.setLayoutY(backButton.getFont().getSize() * 0.75);
+        backButton.setPrefWidth(backButton.getFont().getSize() * 6);
+        backButton.setPrefHeight(sceneHeight / 12);
         
         versionLabel.setY(sceneHeight - 10);
     }
@@ -171,6 +179,11 @@ public class TicTacToeController extends Controller {
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+    
+    
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
     
     
@@ -266,26 +279,21 @@ public class TicTacToeController extends Controller {
     
     
     private void showWinner(GameOverInfo gameOverInfo) {
-        switch (gameOverInfo.getStateType()) {
-            case X_WINNER:
-                turnLabel.setText("X wins!");
-                break;
-            case O_WINNER:
-                turnLabel.setText("O wins!");
-                break;
-            default:
-                turnLabel.setText("Cat's game!");
-        }
-        
-//        Timeline fadeOutAnimation = Animations.getFadeOutTimeline(gameFade);
-//        fadeOutAnimation.play();
-//        fadeOutAnimation.setOnFinished(e -> {
-//
-//        });
+        Timeline fadeOutAnimation = Animations.getFadeOutTimeline(gameFade, 500);
+        fadeOutAnimation.play();
+        fadeOutAnimation.setOnFinished(e -> {
+            try {
+                application.startResultsScreen(stage, gameOverInfo, gameType);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     
     public void doGameOver(GameOverInfo gameOverInfo) {
         stage.setResizable(false);
+        backButton.setDisable(true);
         
         if (gameOverInfo.getStateType() != StateType.DRAW) {
             Timeline timeline;
