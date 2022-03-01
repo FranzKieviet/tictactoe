@@ -1,25 +1,21 @@
 package com.tictaccode.tictactoe;
 
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.stage.Stage;
 
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
-public class TicTacToeController {
+public class TicTacToeController extends Controller {
     /** Javafx pane element retrieved from the fxml file. */
     @FXML
     Pane pane;
@@ -55,29 +51,21 @@ public class TicTacToeController {
      */
     private Board board;
     
-    private Font gameFont;
-    
-    private Stage stage;
-    
-    private Scene welcomeScene;
-    
     /**
      * An integer variable that holds count on which turn number it is
      */
     private int turnCount;
+    
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
      * Initializes all private data members and sets up the initial tic-tac-toe board.
      */
     public void initialize() {
-        gameFont = Font.loadFont(TicTacToeController.class.getResource("Chalkduster.ttf").toString(), 30);
-        
         // sets the text of the version label based on the current version of the application
         versionLabel.setText(TicTacToeApplication.VERSION);
         
-        turnLabel.setFont(gameFont);
-        turnLabel.setTextAlignment(TextAlignment.CENTER);
+        turnLabel.setFont(Fonts.GAME_FONT);
         
         // adds all ui info about game pieces to a GamePiece array for ease of use
         gamePieces = new GamePiece[9];
@@ -103,25 +91,42 @@ public class TicTacToeController {
     }
     
     
+    @Override
     public void startUI() {
+        for (GamePiece gamePiece : gamePieces) {
+            gamePiece.hidePiece();
+            gamePiece.setPiece(PlayType.NOTHING);
+        }
+        
         updateUI();
     
-        double sceneWidth = boardImage.getScene().getWidth();
-        double sceneHeight = boardImage.getScene().getHeight();
+        double width = gameFade.getScene().getWidth();
+        double height = gameFade.getScene().getHeight();
+        gameFade.setCenterX(width / 2);
+        gameFade.setCenterY(height / 2);
+        gameFade.setRadius(Math.max(width, height) / 2 + 250);
         
         TranslateTransition backgroundAnimation = new TranslateTransition(Duration.seconds(150), backgroundPattern);
-        backgroundAnimation.setFromX(-sceneWidth);
-        backgroundAnimation.setFromY(-sceneHeight);
+        backgroundAnimation.setFromX(-width);
+        backgroundAnimation.setFromY(-height);
         backgroundAnimation.setToX(0);
         backgroundAnimation.setToY(0);
         backgroundAnimation.setAutoReverse(true);
         backgroundAnimation.setCycleCount(Animation.INDEFINITE);
         backgroundAnimation.play();
-        
-        playBoardAnimation();
     }
     
     
+    public void fadeIn() {
+        disableGameButtons();
+        
+        Animations.getFadeInTimeline(gameFade, 500).play();
+        
+        enableAvailableGameButtons();
+    }
+    
+    
+    @Override
     public void updateUI() {
         double sceneWidth = boardImage.getScene().getWidth();
         double sceneHeight = boardImage.getScene().getHeight();
@@ -129,7 +134,7 @@ public class TicTacToeController {
         boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
         backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
     
-        turnLabel.setFont(new Font(gameFont.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
+        turnLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
         turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 2.3);
         turnLabel.setY(turnLabel.getFont().getSize() * 1.5);
         
@@ -157,38 +162,15 @@ public class TicTacToeController {
     }
     
     
-    public void playBoardAnimation() {
-        disableGameButtons();
-    
-        double width = boardImage.getScene().getWidth();
-        double height = boardImage.getScene().getHeight();
-        gameFade.setCenterX(width / 2);
-        gameFade.setCenterY(height / 2);
-        gameFade.setRadius(Math.max(width, height) / 2 + 250);
-        
-        Thread boardAnimation = new Thread(() -> {
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.millis(100), new KeyValue(gameFade.radiusProperty(),
-                            gameFade.getRadius())),
-                    new KeyFrame(Duration.millis(600), new KeyValue(gameFade.radiusProperty(), 0))
-            );
-            
-            Platform.runLater(timeline::play);
-        });
-        
-        boardAnimation.start();
-    
-        enableAvailableGameButtons();
+    @Override
+    public void setApplication(TicTacToeApplication application) {
+        this.application = application;
     }
     
     
+    @Override
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-    
-    
-    public void setWelcomeScene(Scene scene) {
-        welcomeScene = scene;
     }
     
     
@@ -270,8 +252,16 @@ public class TicTacToeController {
      *
      */
     public void backMove() {
-        stage.setScene(welcomeScene);
-        stage.setResizable(true);
+        Timeline fadeOut = Animations.getFadeOutTimeline(gameFade, 100);
+        fadeOut.play();
+        fadeOut.setOnFinished(e -> {
+            try {
+                application.startWelcomeScreen(stage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     
     
@@ -287,20 +277,9 @@ public class TicTacToeController {
                 turnLabel.setText("Cat's game!");
         }
         
-//        double width = boardImage.getScene().getWidth();
-//        double height = boardImage.getScene().getHeight();
-//
-//        gameFade.setCenterX(width / 2);
-//        gameFade.setCenterY(height / 2);
-//        gameFade.setRadius(1);
-//
-//        Timeline timeline = new Timeline(
-//                new KeyFrame(Duration.millis(1000), new KeyValue(gameFade.radiusProperty(), 1)),
-//                new KeyFrame(Duration.millis(1500), new KeyValue(gameFade.radiusProperty(), Math.max(width, height) / 2 + 250))
-//        );
-//
-//        timeline.play();
-//        timeline.setOnFinished(e -> {
+//        Timeline fadeOutAnimation = Animations.getFadeOutTimeline(gameFade);
+//        fadeOutAnimation.play();
+//        fadeOutAnimation.setOnFinished(e -> {
 //
 //        });
     }

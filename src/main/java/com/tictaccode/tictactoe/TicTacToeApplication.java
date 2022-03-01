@@ -15,7 +15,10 @@ public class TicTacToeApplication extends Application {
     /** Stores the current version of the application. */
     public static final String VERSION = "0.5.5-SNAPSHOT";
     
-    private Scene welcomeScene;
+    public static final int MIN_WIDTH = 600;
+    public static final int MIN_HEIGHT = 600;
+    
+    private boolean isFirst = true;
     
     /**
      * Loads the initial scene, creates the window, then displays the scene on the window.
@@ -25,29 +28,49 @@ public class TicTacToeApplication extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        welcomeScene = Welcome.getScene(primaryStage, this);
+        primaryStage.setMinWidth(MIN_WIDTH);
+        primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setTitle("Tic Tac Toe");
+        
+        startWelcomeScreen(primaryStage);
+    }
+    
+    public void startWelcomeScreen(Stage primaryStage) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("welcome-view.fxml"));
+        Scene welcomeScene;
+        
+        if (isFirst)
+            welcomeScene = new Scene(fxmlLoader.load());
+        else
+            welcomeScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+    
+        WelcomeController welcomeController = fxmlLoader.getController();
+        welcomeController.setApplication(this);
+        welcomeController.setStage(primaryStage);
+    
         primaryStage.setScene(welcomeScene);
-        primaryStage.setMinWidth(600);
-        primaryStage.setMinHeight(600);
         primaryStage.show();
-
+        welcomeController.startUI();
+        
+        if (isFirst)
+            isFirst = false;
+        else
+            welcomeController.fadeIn();
+        
     }
 
-    public void startSinglePlayerGame(Stage primaryStage) throws Exception{
+    public void startLocalMultiplayerGame(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-        primaryStage.setTitle("Tic Tac Toe");
-        primaryStage.setScene(scene);
-        
-        TicTacToeController controller = fxmlLoader.getController();
-        controller.setStage(primaryStage);
-        controller.setWelcomeScene(welcomeScene);
-        
-        primaryStage.show();
-        
+        Scene ticTacToeScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+
         TicTacToeController ticTacToeController = fxmlLoader.getController();
+        ticTacToeController.setApplication(this);
+        ticTacToeController.setStage(primaryStage);
+        
+        primaryStage.setScene(ticTacToeScene);
+        primaryStage.show();
         ticTacToeController.startUI();
+        ticTacToeController.fadeIn();
     }
     
     /**

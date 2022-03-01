@@ -23,6 +23,8 @@ public class GamePiece {
         this.oImage = oImage;
         this.gameButton = gameButton;
         this.fade = fade;
+        
+        playType = PlayType.NOTHING;
     }
     
     public void setPiece(PlayType playType) {

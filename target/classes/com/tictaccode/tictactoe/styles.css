@@ -17,6 +17,15 @@
     -fx-cursor: hand;
 }
 
+.uiButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: #F0F0F0;
+    -fx-text-alignment: center;
+}
+
 .xPiece {
     -fx-stroke: #EE0000;
 }
@@ -34,8 +43,8 @@
     -fx-fill: #353535;
 }
 
-#gameFade {
-    -fx-fill: #707070;
+.fade {
+    -fx-fill: #606060;
 }
 
 .backButton{
@@ -44,6 +53,11 @@
     -fx-font-weight: bold;
     -fx-font-alignment: center;
     -fx-font-size: 12;
+}
+
+#title {
+    -fx-font-size: 60;
+    -fx-fill: #F0F0F0;
 }
 
 #turnLabel {

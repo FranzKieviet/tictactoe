@@ -137,6 +137,6 @@
     <!-- displays the current version of the application -->
     <Text fx:id="versionLabel" x="5" />
 
-    <Circle fx:id="gameFade" />
+    <Circle fx:id="gameFade" styleClass="fade" radius="5000" />
 </Pane>
 
