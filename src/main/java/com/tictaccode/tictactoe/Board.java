@@ -107,4 +107,56 @@ public class Board {
     public PlayType[][] getBoardSpots() {
         return boardSpots;
     }
+
+    //Minimax Function, assume O is maximizing player
+    public int minimax(Board grid, int scoreX, int scoreO, boolean maximizingPlayer)
+    {
+        //Determine if game is over
+        if(grid.isComplete()) {
+            if (grid.checkState() == StateType.X_WINNER) return -1;  //-1 for loss
+            else if(grid.checkState() == StateType.O_WINNER) return 1;   // +1 for win
+            else return 0;  //Nothing for draw
+        }
+
+        //If it is maximizing player's turn
+        if(maximizingPlayer) {
+            int maxEval = Integer.MIN_VALUE;
+            //Go through all possible moves
+            for(int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++i) {
+                    if(boardSpots[i][j] == PlayType.NOTHING) {
+                        //Play move on new grid and pass it into child
+                        Board newGrid = grid;
+                        newGrid.setBoardPosition(i, j, PlayType.O);
+                        int eval = minimax(newGrid, scoreX, scoreO, false);
+                        maxEval = Math.max(scoreX, eval);
+                    }
+                    if (scoreO <= scoreX) break;  //Check if we can break early
+                }
+                if (scoreO <= scoreX) break; //Check if we can break early
+            }
+            return maxEval;
+        }
+        //If it is the other player's turn
+        else {
+            int minEval = Integer.MAX_VALUE;
+            //Go through all possible moves
+            for(int i = 0; i < 3; ++i) {
+                for(int j = 0; j < 3; ++j) {
+                    if(boardSpots[i][j] == PlayType.NOTHING) {
+                        //Play move on new grid and pass it into child
+                        Board newGrid = grid;
+                        newGrid.setBoardPosition(i, j, PlayType.X);
+                        int eval = minimax(newGrid,scoreX, scoreO, true);
+                        minEval = Math.min(minEval, eval);
+                    }
+                    if(scoreO <= scoreX) break; //Check if we can break early
+                }
+                if(scoreO <= scoreX) break; //Check if we can break early
+            }
+            return minEval;
+        }
+
+
+    }
 }
