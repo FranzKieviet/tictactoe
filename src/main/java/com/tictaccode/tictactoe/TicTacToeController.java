@@ -227,8 +227,7 @@ public class TicTacToeController {
                 // let AI play if it is single player
                 if (singlePlayer) placeMoveAI();
 
-                // enables all game buttons in the spots that are empty on the game board
-                enableAvailableGameButtons();
+                if(board.checkState() == StateType.CONTINUE)  enableAvailableGameButtons();
         }
         }
 
@@ -363,7 +362,20 @@ public class TicTacToeController {
         turnLabel.setText("X");
 
         // determines whether x won, o won, there was a draw, or to continue the game
-        continueGameOrEnd();
+        switch (board.checkState()) {
+            case X_WINNER:
+                turnLabel.setText("X WIN");
+                break;
+            case O_WINNER:
+                turnLabel.setText("O WIN");
+                break;
+            case DRAW:
+                turnLabel.setText("DRAW");
+                break;
+            default:
+                // move onto the next turn
+                ++turnCount;
+        }
     }
 
     /**
@@ -380,28 +392,6 @@ public class TicTacToeController {
      */
     public void setToMultiplayerMode() {
         singlePlayer = false;
-    }
-
-    /**
-     * The continueGameOrEnd() method determines who won or if we need to move onto the next turn
-     *
-     */
-    public void continueGameOrEnd() {
-        // determines whether x won, o won, there was a draw, or to continue the game
-        switch (board.checkState()) {
-            case X_WINNER:
-                turnLabel.setText("X WIN");
-                break;
-            case O_WINNER:
-                turnLabel.setText("O WIN");
-                break;
-            case DRAW:
-                turnLabel.setText("DRAW");
-                break;
-            default:
-                // move onto the next turn
-                ++turnCount;
-        }
     }
 
 
