@@ -28,24 +28,6 @@ public class Board {
         newBoard();
     }
 
-    public Board(Board board) {
-
-        boardSpots = new PlayType[BOARD_SIZE][BOARD_SIZE];
-
-        for (int y = 0; y < BOARD_SIZE; ++y)
-            for (int x = 0; x < BOARD_SIZE; ++x)
-            {
-                if(board.getBoardSpots()[y][x] == PlayType.X) boardSpots[y][x] = PlayType.X;
-                if(board.getBoardSpots()[y][x] == PlayType.O) boardSpots[y][x] = PlayType.O;
-                if(board.getBoardSpots()[y][x] == PlayType.NOTHING) boardSpots[y][x] = PlayType.NOTHING;
-            }
-
-
-
-
-    }
-
-    
     /**
      * Creates a new board that is empty (PlayType.NOTHING).
      */
