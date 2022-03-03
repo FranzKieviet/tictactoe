@@ -229,15 +229,16 @@ public class TicTacToeController {
                     int maxEval = Integer.MIN_VALUE;
                     int optimalX = 0;
                     int optimalY = 0;
-                    PlayType[][] boardSpots = board.getBoardSpots();
+
                     //Go through all possible moves
                     for (int i = 0; i < board.BOARD_SIZE; ++i) {
                         for (int j = 0; j < board.BOARD_SIZE; ++j) {
-                            if (boardSpots[i][j] == PlayType.NOTHING) {
+                            if (board.getBoardSpots()[i][j] == PlayType.NOTHING) {
                                 //Play move on new grid and pass it into child
-                                Board newGrid = board; //TODO: Make copy constructor for Board
-                                newGrid.setBoardPosition(i, j, PlayType.O);
-                                int eval = board.minimax(newGrid, 0, 0, false);
+                                board.setBoardPosition(i, j, PlayType.O);
+                                int eval = minimax(board, 0, 0, false);
+                                //Undo move
+                                board.setBoardPosition(i, j, PlayType.NOTHING);
                                 if (eval > maxEval) {
                                     maxEval = eval;
                                     optimalX = i;
@@ -247,7 +248,7 @@ public class TicTacToeController {
                         }
                     }
                     board.setBoardPosition(optimalX, optimalY, PlayType.O);
-                    oPieces[optimalX + optimalY].displayPiece();
+                    oPieces[optimalX + (optimalY * 3)].displayPiece();
                     ++turnCount;
                 }
 
@@ -256,6 +257,59 @@ public class TicTacToeController {
         }
 
         }
+
+    //Minimax Function, assume O is maximizing player
+    public int minimax(Board board, int scoreX, int scoreO, boolean maximizingPlayer)
+    {
+        //Determine if game is over
+            if (board.checkState() == StateType.X_WINNER) return -1;  //-1 for loss
+            if (board.checkState() == StateType.O_WINNER) return 1;   // +1 for win
+            if (board.checkState() == StateType.DRAW) return 0;       // 0 for tiw
+
+        //If it is maximizing player's turn
+        if(maximizingPlayer) {
+            int maxEval = Integer.MIN_VALUE;
+            //Go through all possible moves
+            for(int i = 0; i < board.BOARD_SIZE; ++i) {
+                for (int j = 0; j < board.BOARD_SIZE; ++j) {
+                    if(board.getBoardSpots()[i][j] == PlayType.NOTHING) {
+                        //Play move on new grid and pass it into child
+                        board.setBoardPosition(i, j, PlayType.O);
+                        int eval = minimax(board, scoreX, scoreO, false);
+                        //Undo move
+                        board.setBoardPosition(i, j, PlayType.NOTHING);
+                        maxEval = Math.max(scoreO, eval);
+                        scoreO = Math.max(scoreO, eval);
+                    }
+                    if (scoreO <= scoreX) break;  //Check if we can break early
+                }
+                if (scoreO <= scoreX) break; //Check if we can break early
+            }
+            return maxEval;
+        }
+        //If it is the other player's turn
+        else {
+            int minEval = Integer.MAX_VALUE;
+            //Go through all possible moves
+            for(int i = 0; i < board.BOARD_SIZE; ++i) {
+                for(int j = 0; j < board.BOARD_SIZE; ++j) {
+                    if(board.getBoardSpots()[i][j] == PlayType.NOTHING) {
+                        //Play move on new grid and pass it into child
+                        board.setBoardPosition(i, j, PlayType.X);
+                        int eval = minimax(board,scoreX, scoreO, true);
+                        minEval = Math.min(minEval, eval);
+                        scoreX = Math.min(minEval, scoreX);
+                    }
+                    if(scoreO <= scoreX) break; //Check if we can break early
+                }
+                if(scoreO <= scoreX) break; //Check if we can break early
+            }
+            return minEval;
+        }
+
+
+    }
+
     /**
      * The backMove() method allows the user to open welcome screen
      *
