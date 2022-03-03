@@ -43,6 +43,7 @@ public class TicTacToeApplication extends Application {
         TicTacToeController controller = fxmlLoader.getController();
         controller.setStage(primaryStage);
         controller.setWelcomeScene(welcomeScene);
+        controller.setToSinglePlayerMode();
         
         primaryStage.show();
     }

@@ -71,7 +71,7 @@ public class TicTacToeController {
      */
     private int turnCount;
 
-    private boolean singlePlayer = true;
+    private boolean singlePlayer;
 
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -225,90 +225,185 @@ public class TicTacToeController {
                 ++turnCount;
 
                 // let AI play if it is single player
-                if (singlePlayer && turnCount % 2 == 0) {
-                    int maxEval = Integer.MIN_VALUE;
-                    int optimalX = 0;
-                    int optimalY = 0;
-
-                    //Go through all possible moves
-                    for (int i = 0; i < board.BOARD_SIZE; ++i) {
-                        for (int j = 0; j < board.BOARD_SIZE; ++j) {
-                            if (board.getBoardSpots()[i][j] == PlayType.NOTHING) {
-                                //Play move on new grid and pass it into child
-                                board.setBoardPosition(i, j, PlayType.O);
-                                int eval = minimax(board, 0, 0, false);
-                                //Undo move
-                                board.setBoardPosition(i, j, PlayType.NOTHING);
-                                if (eval > maxEval) {
-                                    maxEval = eval;
-                                    optimalX = i;
-                                    optimalY = j;
-                                }
-                            }
-                        }
-                    }
-                    board.setBoardPosition(optimalX, optimalY, PlayType.O);
-                    oPieces[optimalX + (optimalY * 3)].displayPiece();
-                    ++turnCount;
-                }
+                if (singlePlayer) placeMoveAI();
 
                 // enables all game buttons in the spots that are empty on the game board
                 enableAvailableGameButtons();
         }
-
         }
 
-    //Minimax Function, assume O is maximizing player
-    public int minimax(Board board, int scoreX, int scoreO, boolean maximizingPlayer)
+    /**
+     * The minimax function scores how optimal a move is
+     *
+     */
+    public int minimax(int scoreX, int scoreO, boolean maximizingPlayerTurn)
     {
-        //Determine if game is over
-            if (board.checkState() == StateType.X_WINNER) return -1;  //-1 for loss
-            if (board.checkState() == StateType.O_WINNER) return 1;   // +1 for win
-            if (board.checkState() == StateType.DRAW) return 0;       // 0 for tiw
+        PlayType maximizingPlay;
+        PlayType minimizingPlay;
+        StateType maximizerWin;
+        StateType minimizerWin;
 
-        //If it is maximizing player's turn
-        if(maximizingPlayer) {
+        //Determine maximizing player
+        if(turnCount % 2 == 1) {
+            maximizingPlay = PlayType.X;
+            maximizerWin = StateType.X_WINNER;
+            minimizingPlay = PlayType.O;
+            minimizerWin = StateType.O_WINNER;
+        }
+        else {
+            maximizingPlay = PlayType.O;
+            maximizerWin = StateType.O_WINNER;
+            minimizingPlay = PlayType.X;
+            minimizerWin = StateType.X_WINNER;
+        }
+
+        //Determine if game is over
+        if (board.checkState() == minimizerWin) return -1;        //-1 for loss
+        if (board.checkState() == maximizerWin) return 1;         // +1 for win
+        if (board.checkState() == StateType.DRAW) return 0;       // 0 for tiw
+
+        //If it is maximizing player's turn, player O
+        if(maximizingPlayerTurn) {
             int maxEval = Integer.MIN_VALUE;
-            //Go through all possible moves
-            for(int i = 0; i < board.BOARD_SIZE; ++i) {
-                for (int j = 0; j < board.BOARD_SIZE; ++j) {
-                    if(board.getBoardSpots()[i][j] == PlayType.NOTHING) {
-                        //Play move on new grid and pass it into child
-                        board.setBoardPosition(i, j, PlayType.O);
-                        int eval = minimax(board, scoreX, scoreO, false);
-                        //Undo move
-                        board.setBoardPosition(i, j, PlayType.NOTHING);
+
+            //Go through all possible moves player O can make
+            for(int y = 0; y < board.BOARD_SIZE; ++y) {
+                for (int x = 0; x < board.BOARD_SIZE; ++x) {
+                    if(board.getBoardSpots()[y][x] == PlayType.NOTHING) {
+
+                        //Play move on the board
+                        board.setBoardPosition(x, y , maximizingPlay);
+
+                        //Score the move
+                        int eval = minimax(scoreX, scoreO, false);
+
+                        //Undo the move
+                        board.setBoardPosition(x, y , PlayType.NOTHING);;
+
+                        //Evaluate if calculated score is the best score
                         maxEval = Math.max(scoreO, eval);
                         scoreO = Math.max(scoreO, eval);
                     }
-                    if (scoreO <= scoreX) break;  //Check if we can break early
+                    if(scoreO >= scoreX) break;     //Can we break early
                 }
-                if (scoreO <= scoreX) break; //Check if we can break early
+                if(scoreO >= scoreX) break;         //Can we break early
+
             }
             return maxEval;
         }
-        //If it is the other player's turn
+        //If it is the other player's turn, player X
         else {
             int minEval = Integer.MAX_VALUE;
-            //Go through all possible moves
-            for(int i = 0; i < board.BOARD_SIZE; ++i) {
-                for(int j = 0; j < board.BOARD_SIZE; ++j) {
-                    if(board.getBoardSpots()[i][j] == PlayType.NOTHING) {
-                        //Play move on new grid and pass it into child
-                        board.setBoardPosition(i, j, PlayType.X);
-                        int eval = minimax(board,scoreX, scoreO, true);
+
+            //Go through all possible moves player X can make
+            for(int y = 0; y < board.BOARD_SIZE; ++y) {
+                for(int x = 0; x < board.BOARD_SIZE; ++x) {
+                    if(board.getBoardSpots()[y][x] == PlayType.NOTHING) {
+
+                        //Play move on the board
+                        board.setBoardPosition(x, y, minimizingPlay);
+
+                        //Score the move
+                        int eval = minimax(scoreX, scoreO, true);
+
+                        //Undo the move
+                        board.setBoardPosition(x, y, PlayType.NOTHING);;
+
+                        //Evaluate if calculated score is the best score
                         minEval = Math.min(minEval, eval);
                         scoreX = Math.min(minEval, scoreX);
                     }
-                    if(scoreO <= scoreX) break; //Check if we can break early
+                    if(scoreO >= scoreX) break;     //Can we break early
                 }
-                if(scoreO <= scoreX) break; //Check if we can break early
+                if(scoreO >= scoreX) break;         //Can we break early
+
             }
             return minEval;
         }
 
 
     }
+    /**
+     * The placeAI() method plays the most optimal move
+     *
+     */
+
+    private void placeMoveAI() {
+        int maxEval = Integer.MIN_VALUE;
+        int optimalX = 0;
+        int optimalY = 0;
+
+        //Go through all possible moves
+        for (int i = 0; i < board.BOARD_SIZE; ++i) {
+            for (int j = 0; j < board.BOARD_SIZE; ++j) {
+                if (board.getBoardSpots()[i][j] == PlayType.NOTHING) {
+
+                    //Play move on new grid and pass it into child
+                    if(turnCount % 2 == 1) board.setBoardPosition(j, i, PlayType.X);
+                    else board.setBoardPosition(j, i, PlayType.O);
+
+                    int eval = minimax(Integer.MAX_VALUE, Integer.MIN_VALUE, false);
+                    //Undo move
+                    board.setBoardPosition(j, i, PlayType.NOTHING);
+
+                    //If this last turn is currently most optimal, set it as so
+                    if (eval > maxEval) {
+                        maxEval = eval;
+                        optimalX = j;
+                        optimalY = i;
+                    }
+                }
+            }
+        }
+
+        //Play the most optimal move
+        board.setBoardPosition(optimalX, optimalY, PlayType.O);
+        oPieces[(optimalX) + optimalY * 3].displayPiece();
+
+        turnLabel.setText("X");
+
+        // determines whether x won, o won, there was a draw, or to continue the game
+        continueGameOrEnd();
+    }
+
+    /**
+     * The setToSinglePlayerMode() sets the game mode to single player
+     *
+     */
+    public void setToSinglePlayerMode() {
+        singlePlayer = true;
+    }
+
+    /**
+     * The setToMultiplayerMode() sets the game mode to multiplayer player
+     *
+     */
+    public void setToMultiplayerMode() {
+        singlePlayer = false;
+    }
+
+    /**
+     * The continueGameOrEnd() method determines who won or if we need to move onto the next turn
+     *
+     */
+    public void continueGameOrEnd() {
+        // determines whether x won, o won, there was a draw, or to continue the game
+        switch (board.checkState()) {
+            case X_WINNER:
+                turnLabel.setText("X WIN");
+                break;
+            case O_WINNER:
+                turnLabel.setText("O WIN");
+                break;
+            case DRAW:
+                turnLabel.setText("DRAW");
+                break;
+            default:
+                // move onto the next turn
+                ++turnCount;
+        }
+    }
+
 
     /**
      * The backMove() method allows the user to open welcome screen
