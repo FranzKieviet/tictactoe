@@ -137,7 +137,17 @@ public class WelcomeController extends Controller {
     
     
     public void goToSingleplayer() {
-        // TODO implement go to singleplayer game here
+        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
+
+        fadeOut.play();
+        fadeOut.setOnFinished(e -> {
+            try {
+                application.startSinglePlayerGame(stage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     
     

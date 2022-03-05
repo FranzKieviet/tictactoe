@@ -145,7 +145,17 @@ public class ResultsController extends Controller {
         transition.play();
         transition.setOnFinished(e -> {
             try {
-                application.startLocalMultiplayerGame(stage);
+                switch (gameType) {
+                    case SINGLEPLAYER:
+                        application.startSinglePlayerGame(stage);
+                        break;
+                    case LOCAL_MULTIPLAYER:
+                        application.startLocalMultiplayerGame(stage);
+                        break;
+                    default: break;
+
+                }
+
             }
             catch (Exception ex) {
                 ex.printStackTrace();

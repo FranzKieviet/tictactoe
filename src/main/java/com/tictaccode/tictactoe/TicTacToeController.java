@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
@@ -55,6 +56,11 @@ public class TicTacToeController extends Controller {
      * An integer variable that holds count on which turn number it is
      */
     private int turnCount;
+
+    /**
+     * A player AI that can play the game
+     */
+    private PlayerAI playerAI;
     
     private GameType gameType;
     
@@ -83,6 +89,9 @@ public class TicTacToeController extends Controller {
         
         // initializes the board
         board = new Board(this);
+
+        // initializes AI
+        playerAI = new PlayerAI(this, PlayType.O);
     
         // initializes the turn count
         turnCount = 1;
@@ -249,9 +258,38 @@ public class TicTacToeController extends Controller {
         GamePiece gamePiece = gamePieces[idNum - 1];
         gamePiece.setPiece(playType);
         gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces);
+
+        //If single player, let AI have a turn
+        if(gameType == GameType.SINGLEPLAYER && board.checkState(gamePieces).getStateType() == StateType.CONTINUE) {
+            placeMoveAI();
+        }
     
         // move onto the next turn
         ++turnCount;
+    }
+
+    public void placeMoveAI() {
+        // disables all game buttons while placing the move
+        disableGameButtons();
+
+        //Determine play type
+        PlayType playType = (turnCount % 2 == 1) ? PlayType.O : PlayType.X;
+
+        //Determine where best to move
+        Pair<Integer, Integer> move = playerAI.determineMove(board, gamePieces);
+        int x = move.getKey().intValue();
+        int y = move.getValue().intValue();
+
+        //Execute move
+        board.setBoardPosition(x, y, playType);
+
+        // displays the move to the user
+        GamePiece gamePiece = gamePieces[x + (3 * y)];
+        gamePiece.setPiece(playType);
+        gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces);
+
+        //Move onto the next turn
+        turnCount++;
     }
     
     
@@ -366,4 +404,7 @@ public class TicTacToeController extends Controller {
             showWinner(gameOverInfo);
         }
     }
+
+
+
 }
