@@ -185,8 +185,8 @@ public class TicTacToeController extends Controller {
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
     }
-    
-    
+
+
     /**
      * Disables all the game buttons on the tic-tac-toe board.
      */
@@ -194,15 +194,15 @@ public class TicTacToeController extends Controller {
         for (GamePiece gamePiece : gamePieces)
             gamePiece.toggleGameButton(false);
     }
-    
-    
+
+
     /**
      * Enables all game buttons on the tic-tac-toe board that are empty (no X or O).
      */
     public void enableAvailableGameButtons() {
         // the boardSpots array holds whether each spot on the tic-tac-toe board has an O, X, or nothing in it
         PlayType[][] boardSpots = board.getBoardSpots();
-        
+
         // traverses through the boardSpots array and enables all buttons in the spot that has nothing in it
         for (int y = 0; y < Board.BOARD_SIZE; ++y)
             for (int x = 0; x < Board.BOARD_SIZE; ++x)
@@ -211,8 +211,8 @@ public class TicTacToeController extends Controller {
     
         turnLabel.setText((turnCount % 2 == 1 ? "X's Turn" : "O's Turn"));
     }
-    
-    
+
+
     /**
      * The placeMove() method allows the user to play their move on the tic-tac-toe board and updates all necessary
      * data pertaining to the move.
@@ -222,7 +222,7 @@ public class TicTacToeController extends Controller {
     public void placeMove(MouseEvent mouseEvent) {
         // disables all game buttons while placing the move
         disableGameButtons();
-        
+
         // sets what type of piece the user is playing based on the turn count
         PlayType playType = (turnCount % 2 == 1 ? PlayType.X : PlayType.O);
         
@@ -230,7 +230,7 @@ public class TicTacToeController extends Controller {
         Button b = (Button) mouseEvent.getSource();
         String id = b.getId();
         int idNum = Integer.parseInt(id.substring(id.length() - 1));
-        
+
         // gets the x and y position where the move was placed
         int x = 0, y = 0;
         for (int i = 0; i < idNum - 1; ++i) {
@@ -241,10 +241,10 @@ public class TicTacToeController extends Controller {
                 x = 0;
             }
         }
-        
+
         // sets the move on the board
         board.setBoardPosition(x, y, playType);
-        
+
         // displays the move to the user
         GamePiece gamePiece = gamePieces[idNum - 1];
         gamePiece.setPiece(playType);

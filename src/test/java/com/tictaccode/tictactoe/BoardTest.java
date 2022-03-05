@@ -74,4 +74,5 @@ class BoardTest {
     void shouldGetBoardSpotsNotNull() {
         Assertions.assertTrue(board.getBoardSpots() != null);
     }
+
 }

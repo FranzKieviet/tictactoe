@@ -27,8 +27,7 @@ public class Board {
         // creates a new board
         newBoard();
     }
-    
-    
+
     /**
      * Creates a new board that is empty (PlayType.NOTHING).
      */
@@ -116,4 +115,5 @@ public class Board {
     public PlayType[][] getBoardSpots() {
         return boardSpots;
     }
+
 }
