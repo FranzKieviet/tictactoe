@@ -274,7 +274,7 @@ public class TicTacToeController extends Controller {
     public void placeMoveAI() {
         // disables all game buttons while placing the move
         disableGameButtons();
-
+        
         //Determine play type
         PlayType playType = (turnCount % 2 == 0) ? PlayType.O : PlayType.X;
 

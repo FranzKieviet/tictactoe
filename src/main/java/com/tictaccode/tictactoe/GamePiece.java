@@ -83,7 +83,7 @@ public class GamePiece {
                 controller.doGameOver(gameOverInfo);
             else {
                 controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
-                
+    
                 //If single player, let AI have a turn
                 if (gameType == GameType.SINGLEPLAYER && playerCurrentTurn)
                     controller.placeMoveAI();
