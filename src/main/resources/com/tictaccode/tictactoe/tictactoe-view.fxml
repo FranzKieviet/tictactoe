@@ -3,125 +3,140 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.tictaccode.tictactoe.TicTacToeController"
-      fx:id="pane" prefHeight="500.0" prefWidth="500.0" stylesheets="@styles.css">
+      fx:id="pane" prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css">
+
+    <ImageView fx:id="backgroundPattern" preserveRatio="true" smooth="true">
+            <Image url="@images/BackgroundPattern.png" />
+    </ImageView>
 
     <!-- holds all the ui elements pertaining to the tic-tac-toe board -->
     <Group fx:id="gameBoard">
-        <!-- The game board's lines -->
-        <Line fx:id="hLine1" layoutX="120" layoutY="190" startX="0" endX="260" strokeWidth="7" strokeLineCap="ROUND"/>
-        <Line fx:id="hLine2" layoutX="120" layoutY="290" startX="0" endX="260" strokeWidth="7" strokeLineCap="ROUND"/>
-        <Line fx:id="vLine1" layoutX="200" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
-        <Line fx:id="vLine2" layoutX="300" layoutY="110" startY="0" endY="260" strokeWidth="7" strokeLineCap="ROUND"/>
+        <!-- The images that show the X's on the board -->
+        <ImageView fx:id="spot1XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot2XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot3XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot4XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot5XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot6XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot7XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot8XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
+        <ImageView fx:id="spot9XImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/X.png" />
+        </ImageView>
 
-        <!-- An X piece in each spot on the board -->
-        <Line fx:id="x1L" styleClass="xPiece" layoutX="135" layoutY="125" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x1R" styleClass="xPiece" layoutX="175" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <!-- The images that show the O's on the board -->
+        <ImageView fx:id="spot1OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot2OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot3OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot4OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot5OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot6OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot7OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot8OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
+        <ImageView fx:id="spot9OImage" opacity="0" preserveRatio="true" cache="true" smooth="true">
+                <Image url="@images/O.png" />
+        </ImageView>
 
-        <Line fx:id="x2L" styleClass="xPiece" layoutX="230" layoutY="125" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x2R" styleClass="xPiece" layoutX="270" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <!-- The fade circle for the X and O images -->
+        <Circle fx:id="spot1Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot2Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot3Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot4Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot5Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot6Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot7Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot8Fade" styleClass="gameButtonFade" />
+        <Circle fx:id="spot9Fade" styleClass="gameButtonFade" />
 
-        <Line fx:id="x3L" styleClass="xPiece" layoutX="325" layoutY="125" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x3R" styleClass="xPiece" layoutX="365" layoutY="125" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <ImageView fx:id="horizontalLine" preserveRatio="false" opacity="0" cache="true" smooth="true">
+            <Image url="@images/HorizontalLine.png" />
+        </ImageView>
 
-        <Line fx:id="x4L" styleClass="xPiece" layoutX="135" layoutY="220" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x4R" styleClass="xPiece" layoutX="175" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <ImageView fx:id="verticalLine" preserveRatio="false" opacity="0" cache="true" smooth="true">
+            <Image url="@images/VerticalLine.png" />
+        </ImageView>
 
-        <Line fx:id="x5L" styleClass="xPiece" layoutX="230" layoutY="220" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x5R" styleClass="xPiece" layoutX="270" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
+        <ImageView fx:id="leftDiagonalLine" preserveRatio="true" opacity="0" cache="true" smooth="true">
+            <Image url="@images/LeftDiagonalLine.png" />
+        </ImageView>
 
-        <Line fx:id="x6L" styleClass="xPiece" layoutX="325" layoutY="220" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x6R" styleClass="xPiece" layoutX="365" layoutY="220" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-
-        <Line fx:id="x7L" styleClass="xPiece" layoutX="135" layoutY="315" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x7R" styleClass="xPiece" layoutX="175" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-
-        <Line fx:id="x8L" styleClass="xPiece" layoutX="230" layoutY="315" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x8R" styleClass="xPiece" layoutX="270" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-
-        <Line fx:id="x9L" styleClass="xPiece" layoutX="325" layoutY="315" startX="0" startY="0" endX="40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-        <Line fx:id="x9R" styleClass="xPiece" layoutX="365" layoutY="315" startX="0" startY="0" endX="-40" endY="40"
-              strokeWidth="7" strokeLineCap="ROUND" visible="false" />
-
-        <!-- An O piece in each spot on the board -->
-        <Circle fx:id="o1" styleClass="oPiece" centerX="155" layoutY="145" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o2" styleClass="oPiece" centerX="250" layoutY="145" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o3" styleClass="oPiece" centerX="345" layoutY="145" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o4" styleClass="oPiece" centerX="155" layoutY="240" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o5" styleClass="oPiece" centerX="250" layoutY="240" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o6" styleClass="oPiece" centerX="345" layoutY="240" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o7" styleClass="oPiece" centerX="155" layoutY="335" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o8" styleClass="oPiece" centerX="250" layoutY="335" strokeWidth="7" radius="22"
-                visible="false" />
-
-        <Circle fx:id="o9" styleClass="oPiece" centerX="345" layoutY="335" strokeWidth="7" radius="22"
-                visible="false" />
+        <ImageView fx:id="rightDiagonalLine" preserveRatio="true" opacity="0" cache="true" smooth="true">
+            <Image url="@images/RightDiagonalLine.png" />
+        </ImageView>
 
         <!-- The game buttons used to get a player's move in each spot on the board -->
-        <Button fx:id="spot1" styleClass="gameButton" layoutX="115" layoutY="105" prefWidth="85" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot2" styleClass="gameButton" layoutX="200" layoutY="105" prefWidth="100" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot3" styleClass="gameButton" layoutX="300" layoutY="105" prefWidth="85" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot4" styleClass="gameButton" layoutX="115" layoutY="190" prefWidth="85" prefHeight="100"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot5" styleClass="gameButton" layoutX="200" layoutY="190" prefWidth="100" prefHeight="100"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot6" styleClass="gameButton" layoutX="300" layoutY="190" prefWidth="85" prefHeight="100"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot7" styleClass="gameButton" layoutX="115" layoutY="290" prefWidth="85" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot8" styleClass="gameButton" layoutX="200" layoutY="290" prefWidth="100" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="spot9" styleClass="gameButton" layoutX="300" layoutY="290" prefWidth="85" prefHeight="85"
-                focusTraversable="false" onMouseClicked="#placeMove" />
-        <Button fx:id="backButton" onMouseClicked="#backMove" layoutX="20" layoutY="20" prefWidth="70" prefHeight="50"
-                styleClass="backButton" text="Back" />
+        <Button fx:id="spot1" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot2" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot3" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot4" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot5" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot6" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot7" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot8" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
+        <Button fx:id="spot9" styleClass="gameButton" focusTraversable="false" onMouseClicked="#placeMove"
+                disable="true" />
 
-        <Label fx:id="turn" text="Turn" layoutX="300" layoutY="20"/>
-        <Label fx:id="turnLabel" layoutX="350" layoutY="20"/>
-
+        <ImageView fx:id="boardImage" preserveRatio="true" smooth="true">
+                <Image url="@images/Board.png" />
+        </ImageView>
     </Group>
 
+    <Button fx:id="backButton" styleClass="uiButton" text="Back" focusTraversable="false" layoutX="5"
+            onMouseClicked="#backMove" />
+
+    <Text fx:id="turnLabel" textAlignment="CENTER" y="50" />
+
     <!-- displays the current version of the application -->
-    <Text fx:id="versionLabel" layoutX="5" layoutY="490" />
+    <Text fx:id="versionLabel" x="5" />
+
+    <Circle fx:id="gameFade" styleClass="fade" radius="5000" />
 </Pane>
 
