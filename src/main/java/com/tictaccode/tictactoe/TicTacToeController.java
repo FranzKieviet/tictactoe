@@ -217,8 +217,16 @@ public class TicTacToeController extends Controller {
             for (int x = 0; x < Board.BOARD_SIZE; ++x)
                 if (boardSpots[y][x] == PlayType.NOTHING)
                     gamePieces[x + y * 3].toggleGameButton(true);
+    }
     
-        turnLabel.setText((turnCount % 2 == 1 ? "X's Turn" : "O's Turn"));
+    
+    public Text getTurnLabel() {
+        return turnLabel;
+    }
+    
+    
+    public int getTurnCount() {
+        return turnCount;
     }
 
 
@@ -253,19 +261,14 @@ public class TicTacToeController extends Controller {
 
         // sets the move on the board
         board.setBoardPosition(x, y, playType);
-
-        // displays the move to the user
-        GamePiece gamePiece = gamePieces[idNum - 1];
-        gamePiece.setPiece(playType);
-        gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces);
-
-        //If single player, let AI have a turn
-        if(gameType == GameType.SINGLEPLAYER && board.checkState(gamePieces).getStateType() == StateType.CONTINUE) {
-            placeMoveAI();
-        }
     
         // move onto the next turn
         ++turnCount;
+        
+        // displays the move to the user
+        GamePiece gamePiece = gamePieces[idNum - 1];
+        gamePiece.setPiece(playType);
+        gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces, gameType, true);
     }
 
     public void placeMoveAI() {
@@ -273,7 +276,7 @@ public class TicTacToeController extends Controller {
         disableGameButtons();
 
         //Determine play type
-        PlayType playType = (turnCount % 2 == 1) ? PlayType.O : PlayType.X;
+        PlayType playType = (turnCount % 2 == 0) ? PlayType.O : PlayType.X;
 
         //Determine where best to move
         Pair<Integer, Integer> move = playerAI.determineMove(board, gamePieces);
@@ -282,14 +285,14 @@ public class TicTacToeController extends Controller {
 
         //Execute move
         board.setBoardPosition(x, y, playType);
-
+    
+        // move onto the next turn
+        ++turnCount;
+        
         // displays the move to the user
         GamePiece gamePiece = gamePieces[x + (3 * y)];
         gamePiece.setPiece(playType);
-        gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces);
-
-        //Move onto the next turn
-        turnCount++;
+        gamePiece.showPiece(boardImage.getFitWidth(), this, gamePieces, gameType, false);
     }
     
     

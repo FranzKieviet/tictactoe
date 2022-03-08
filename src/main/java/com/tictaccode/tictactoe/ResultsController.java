@@ -46,9 +46,6 @@ public class ResultsController extends Controller {
     
     @Override
     public void startUI() {
-        stage.setResizable(true);
-        updateUI();
-        
         switch (gameOverInfo.getStateType()) {
             case X_WINNER:
                 resultsLabel.setText("X wins!");
@@ -59,6 +56,9 @@ public class ResultsController extends Controller {
             default:
                 resultsLabel.setText("Cat's game!");
         }
+    
+        stage.setResizable(true);
+        updateUI();
         
         FadeTransition resultsTransition = new FadeTransition(Duration.millis(500), resultsLabel);
         resultsTransition.setFromValue(0);
@@ -85,7 +85,12 @@ public class ResultsController extends Controller {
         double sceneHeight = resultsLabel.getScene().getHeight();
     
         resultsLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 60 * Math.min(sceneWidth, sceneHeight) / 600));
-        resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 1.8);
+        
+        if (resultsLabel.getText().equals("Cat's game!"))
+            resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 3.4);
+        else
+            resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 1.8);
+        
         resultsLabel.setY(resultsLabel.getFont().getSize() * 1.5);
     
         tryAgainButton.setFont(

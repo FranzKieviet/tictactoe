@@ -49,7 +49,8 @@ public class GamePiece {
         fade.setCenterY(newY + pieceSize / 2);
     }
     
-    public void showPiece(double boardWidth, TicTacToeController controller, GamePiece[] gamePieces) {
+    public void showPiece(double boardWidth, TicTacToeController controller, GamePiece[] gamePieces,
+                          GameType gameType, boolean playerCurrentTurn) {
         if (playType == PlayType.NOTHING) return;
     
         Timeline timeline;
@@ -80,9 +81,17 @@ public class GamePiece {
             // determines whether x won, o won, there was a draw, or to continue the game
             if (stateType == StateType.X_WINNER || stateType == StateType.O_WINNER || stateType == StateType.DRAW)
                 controller.doGameOver(gameOverInfo);
-            else
-                // enables all game buttons in the spots that are empty on the game board
-                controller.enableAvailableGameButtons();
+            else {
+                controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
+                
+                //If single player, let AI have a turn
+                if (gameType == GameType.SINGLEPLAYER && playerCurrentTurn)
+                    controller.placeMoveAI();
+                else
+                    // enables all game buttons in the spots that are empty on the game board or lets ai play in
+                    // singleplayer
+                    controller.enableAvailableGameButtons();
+            }
         });
     }
     
