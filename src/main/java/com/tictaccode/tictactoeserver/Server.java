@@ -30,6 +30,7 @@ public class Server extends Application implements SocketManager {
         controller = fxmlLoader.getController();
         controller.makeResizable(primaryStage, scene);
         primaryStage.setTitle("Server");
+        primaryStage.setScene(scene);
         primaryStage.show();
         
         connections = Collections.synchronizedSet(new HashSet<>());
