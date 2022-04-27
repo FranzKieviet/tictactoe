@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.TextArea?>
+
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tictaccode.tictactoegamecontroller.GameControllerView"
+      prefHeight="200.0" prefWidth="450.0">
+    <TextArea fx:id="ta" editable="false" wrapText="false" prefHeight="200.0" prefWidth="450.0" />
+</Pane>
