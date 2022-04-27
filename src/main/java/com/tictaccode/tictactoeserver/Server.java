@@ -88,6 +88,9 @@ public class Server extends Application implements SocketManager {
         String channel = message.getChannel();
         String messageText = message.getMessage();
         
+        controller.showMessage(connection.getSocket().getInetAddress().getHostAddress() +
+                ": " + channel + " - " + messageText + '\n');
+        
         switch (messageText) {
             case "JoinChannel":
                 connection.addChannel(channel);
