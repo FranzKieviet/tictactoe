@@ -52,12 +52,12 @@ public class GamePiece {
     public void showPiece(double boardWidth, TicTacToeView controller, boolean playerCurrentTurn,
                           boolean hasLost) {
         if (playType == PlayType.NOTHING) return;
-    
+        
         Timeline timeline;
         
         fade.setRadius(boardWidth / 6 - 10);
         fade.setVisible(true);
-    
+        
         if (playType == PlayType.X) {
             xImage.setOpacity(1);
             timeline = new Timeline(
@@ -70,11 +70,11 @@ public class GamePiece {
                             oImage.getFitWidth() / 3))
             );
         }
-    
+        
         timeline.play();
         timeline.setOnFinished(e -> {
             fade.setVisible(false);
-        
+            
             controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
             
             if (!hasLost && !playerCurrentTurn)
@@ -105,15 +105,6 @@ public class GamePiece {
     
     public double getHeight() {
         return gameButton.getHeight();
-    }
-    
-    public ImageView getImage() {
-        if (playType == PlayType.X)
-            return xImage;
-        else if (playType == PlayType.O)
-            return oImage;
-        else
-            return null;
     }
     
     public PlayType getPlayType() {

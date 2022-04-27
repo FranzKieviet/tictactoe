@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Connection {
     
@@ -19,6 +16,10 @@ public class Connection {
     
     private Set<String> channels;
     
+    private ObjectOutputStream oos;
+    
+    private ObjectInputStream ois;
+    
     public Connection(Socket socket, SocketManager socketManager) {
         this.socket = socket;
         this.socketManager = socketManager;
@@ -27,8 +28,6 @@ public class Connection {
         
         listener = new Thread(() -> {
             try {
-                ObjectInputStream ois = new ObjectInputStream(this.socket.getInputStream());
-    
                 while (!this.socket.isClosed()) {
                     Object o = ois.readObject();
                     Message message = (Message) o;
@@ -44,6 +43,15 @@ public class Connection {
                 e.printStackTrace();
             }
         });
+        
+        try {
+            oos = new ObjectOutputStream(this.socket.getOutputStream());
+            ois = new ObjectInputStream(this.socket.getInputStream());
+        }
+        // thrown when the socket is closed/closing
+        catch (IOException e) {
+            closeSocket();
+        }
         
         listener.start();
     }
@@ -66,8 +74,9 @@ public class Connection {
     
     public synchronized void sendMessage(Message message) {
         try {
-            new ObjectOutputStream(socket.getOutputStream()).writeObject(message);
+            oos.writeObject(message);
         }
+        // thrown when the socket is closed/closing
         catch (IOException e) {
             closeSocket();
         }
@@ -76,7 +85,7 @@ public class Connection {
     public synchronized void closeSocket() {
         if (!socket.isClosed()) {
             listener.interrupt();
-    
+            
             try {
                 socket.close();
             }

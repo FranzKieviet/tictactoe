@@ -79,16 +79,16 @@ public class TicTacToeView extends Controller {
         gamePieces[6] = new GamePiece(spot7XImage, spot7OImage, spot7, spot7Fade);
         gamePieces[7] = new GamePiece(spot8XImage, spot8OImage, spot8, spot8Fade);
         gamePieces[8] = new GamePiece(spot9XImage, spot9OImage, spot9, spot9Fade);
-    
+        
         // initializes the turn count
         turnCount = 1;
         turnLabel.setText("X's Turn");
-    
+        
         backButton.setFont(Fonts.GAME_FONT);
         
         pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
         pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
-    
+        
         backButton.setOnMouseEntered(e -> Animations.uiButtonHover(backButton, 25));
         backButton.setOnMouseExited(e -> Animations.uiButtonIdle(backButton, 20));
     }
@@ -97,7 +97,7 @@ public class TicTacToeView extends Controller {
     @Override
     public void startUI() {
         updateUI();
-    
+        
         double width = gameFade.getScene().getWidth();
         double height = gameFade.getScene().getHeight();
         gameFade.setCenterX(width / 2);
@@ -125,25 +125,25 @@ public class TicTacToeView extends Controller {
     public void updateUI() {
         double sceneWidth = boardImage.getScene().getWidth();
         double sceneHeight = boardImage.getScene().getHeight();
-    
+        
         boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
         backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
-    
+        
         turnLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
         turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 2.3);
         turnLabel.setY(turnLabel.getFont().getSize() * 1.5);
         
         double boardImageSize = boardImage.getFitWidth();
-    
+        
         boardImage.setX(sceneWidth / 2 - boardImageSize / 2);
         boardImage.setY(sceneHeight / 2 - boardImageSize / 2 + turnLabel.getFont().getSize() / 2);
-    
+        
         gameFade.setCenterX(sceneWidth / 2);
         gameFade.setCenterY(sceneHeight / 2);
-    
+        
         double boardX = boardImage.getX();
         double boardY = boardImage.getY();
-    
+        
         for (int y = 0; y < BOARD_SIZE; ++y) {
             for (int x = 0; x < BOARD_SIZE; ++x) {
                 double pieceSize = boardImageSize / 3;
@@ -152,7 +152,7 @@ public class TicTacToeView extends Controller {
                         pieceSize);
             }
         }
-    
+        
         backButton.setFont(
                 new Font(Fonts.GAME_FONT.getFamily(), 20 * Math.min(sceneWidth, sceneHeight) / 600));
         backButton.setLayoutY(backButton.getFont().getSize() * 0.75);
@@ -178,8 +178,8 @@ public class TicTacToeView extends Controller {
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
     }
-
-
+    
+    
     /**
      * Disables all the game buttons on the tic-tac-toe board.
      */
@@ -187,8 +187,8 @@ public class TicTacToeView extends Controller {
         for (GamePiece gamePiece : gamePieces)
             gamePiece.toggleGameButton(false);
     }
-
-
+    
+    
     /**
      * Enables all game buttons on the tic-tac-toe board that are empty (no X or O).
      */
@@ -196,7 +196,7 @@ public class TicTacToeView extends Controller {
         // traverses through the boardSpots array and enables all buttons in the spot that has nothing in it
         for (int y = 0; y < BOARD_SIZE; ++y)
             for (int x = 0; x < BOARD_SIZE; ++x)
-                if (gamePieces[x + y * 3].getImage() != null && gamePieces[x + y * 3].getImage().getOpacity() == 1)
+                if (gamePieces[x + y * 3].getPlayType() == PlayType.NOTHING)
                     gamePieces[x + y * 3].toggleGameButton(true);
     }
     
@@ -217,17 +217,17 @@ public class TicTacToeView extends Controller {
         
         int y = Integer.parseInt(moveInfo.substring(2, 3));
         int x = Integer.parseInt(moveInfo.substring(4));
-    
+        
         // move onto the next turn
         ++turnCount;
-    
+        
         // displays the move to the user
         GamePiece gamePiece = gamePieces[x + y * 3];
         gamePiece.setPiece(playType);
         gamePiece.showPiece(boardImage.getFitWidth(), this, false, hasLost);
     }
-
-
+    
+    
     /**
      * The placeMove() method allows the user to play their move on the tic-tac-toe board and updates all necessary
      * data pertaining to the move.
@@ -237,7 +237,7 @@ public class TicTacToeView extends Controller {
     public void placeMove(MouseEvent mouseEvent) {
         // disables all game buttons while placing the move
         disableGameButtons();
-
+        
         // sets what type of piece the user is playing based on the turn count
         PlayType playType = (turnCount % 2 == 1 ? PlayType.X : PlayType.O);
         
@@ -245,7 +245,7 @@ public class TicTacToeView extends Controller {
         Button b = (Button) mouseEvent.getSource();
         String id = b.getId();
         int idNum = Integer.parseInt(id.substring(id.length() - 1));
-
+        
         // gets the x and y position where the move was placed
         int x = 0, y = 0;
         for (int i = 0; i < idNum - 1; ++i) {
@@ -256,7 +256,7 @@ public class TicTacToeView extends Controller {
                 x = 0;
             }
         }
-    
+        
         // move onto the next turn
         ++turnCount;
         
@@ -316,7 +316,7 @@ public class TicTacToeView extends Controller {
                     horizontalLine.setY(goi.getStartPiece().getY());
                     horizontalLine.setFitWidth(1);
                     horizontalLine.setFitHeight(goi.getStartPiece().getHeight());
-    
+                    
                     timeline = new Timeline(
                             new KeyFrame(Duration.millis(250), new KeyValue(horizontalLine.fitWidthProperty(),
                                     boardImage.getFitWidth()))
@@ -330,7 +330,7 @@ public class TicTacToeView extends Controller {
                     verticalLine.setY(boardImage.getY());
                     verticalLine.setFitWidth(goi.getStartPiece().getWidth());
                     verticalLine.setFitHeight(1);
-    
+                    
                     timeline = new Timeline(
                             new KeyFrame(Duration.millis(250), new KeyValue(verticalLine.fitHeightProperty(),
                                     boardImage.getFitWidth()))
@@ -343,7 +343,7 @@ public class TicTacToeView extends Controller {
                     leftDiagonalLine.setX(boardImage.getX());
                     leftDiagonalLine.setY(boardImage.getY());
                     leftDiagonalLine.setFitWidth(1);
-    
+                    
                     timeline = new Timeline(
                             new KeyFrame(Duration.millis(250), new KeyValue(leftDiagonalLine.fitWidthProperty(),
                                     boardImage.getFitWidth()))
@@ -371,7 +371,7 @@ public class TicTacToeView extends Controller {
                     timeline = new Timeline();
                     break;
             }
-    
+            
             timeline.play();
             timeline.setOnFinished(e -> showWinner(stateType));
         } else
@@ -394,7 +394,7 @@ public class TicTacToeView extends Controller {
         //column control if complete X or O
         for (int x = 0; x < BOARD_SIZE; ++x) {
             if (gamePieces[x].getPlayType() == gamePieces[x + 3].getPlayType() &&
-                gamePieces[x + 3].getPlayType() == gamePieces[x + 6].getPlayType()) {
+                    gamePieces[x + 3].getPlayType() == gamePieces[x + 6].getPlayType()) {
                 if (gamePieces[x].getPlayType() == PlayType.X)
                     return new GameOverInfo(StateType.X_WINNER, LineType.VERTICAL, gamePieces[x], gamePieces[x + 6]);
                 else if (gamePieces[x].getPlayType() == PlayType.O)
