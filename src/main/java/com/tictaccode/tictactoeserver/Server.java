@@ -22,8 +22,12 @@ public class Server extends Application implements SocketManager {
     
     private Set<Connection> connections;
     
+    private long currentClientID;
+    
     @Override
     public void start(Stage primaryStage) throws IOException {
+        currentClientID = 1;
+        
         // creates and shows the console for the server
         FXMLLoader fxmlLoader = new FXMLLoader(Server.class.getResource("server-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 450, 200);
@@ -70,6 +74,9 @@ public class Server extends Application implements SocketManager {
                             controller.showMessage(socket.getInetAddress().getHostAddress() + " has connected.\n"));
                     Connection connection = new Connection(socket, this);
                     connections.add(connection);
+                    connection.addChannel(Long.toString(currentClientID));
+                    connection.sendMessage(new Message("ClientID", Long.toString(currentClientID)));
+                    currentClientID++;
                 }
                 catch (IOException e) {}
             }
