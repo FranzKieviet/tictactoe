@@ -49,7 +49,7 @@ public class GamePiece {
         fade.setCenterY(newY + pieceSize / 2);
     }
     
-    public void showPiece(double boardWidth, TicTacToeController controller, boolean playerCurrentTurn,
+    public void showPiece(double boardWidth, TicTacToeView controller, boolean playerCurrentTurn,
                           boolean hasLost) {
         if (playType == PlayType.NOTHING) return;
     

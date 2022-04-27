@@ -10,7 +10,7 @@
 
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.tictaccode.tictactoeclient.TicTacToeController"
+      fx:controller="com.tictaccode.tictactoeclient.TicTacToeView"
       fx:id="pane" prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css">
 
     <ImageView fx:id="backgroundPattern" preserveRatio="true" smooth="true">

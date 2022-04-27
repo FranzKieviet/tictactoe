@@ -15,7 +15,7 @@ import javafx.util.Duration;
 /**
  * Controller for the tic-tac-toe game UI that handles all interactions with elements in the UI.
  */
-public class TicTacToeController extends Controller {
+public class TicTacToeView extends Controller {
     /** The size of a tic-tac-toe board. */
     public static final int BOARD_SIZE = 3;
     

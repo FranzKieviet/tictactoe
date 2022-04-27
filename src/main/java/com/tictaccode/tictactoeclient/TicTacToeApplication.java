@@ -30,7 +30,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
     private long clientID, gameID;
     private int playerNumber;
     
-    private TicTacToeController ticTacToeController;
+    private TicTacToeView ticTacToeView;
     
     private boolean isFirst = true;
     
@@ -120,18 +120,18 @@ public class TicTacToeApplication extends Application implements SocketManager {
             System.exit(1);
         }
     
-        ticTacToeController = fxmlLoader.getController();
-        ticTacToeController.setApplication(this);
-        ticTacToeController.setStage(primaryStage);
-        ticTacToeController.setGameType(gameType);
+        ticTacToeView = fxmlLoader.getController();
+        ticTacToeView.setApplication(this);
+        ticTacToeView.setStage(primaryStage);
+        ticTacToeView.setGameType(gameType);
     
         primaryStage.setScene(ticTacToeScene);
         primaryStage.show();
-        ticTacToeController.startUI();
-        ticTacToeController.fadeIn();
+        ticTacToeView.startUI();
+        ticTacToeView.fadeIn();
         
         if (playerNumber == 1)
-            ticTacToeController.enableAvailableGameButtons();
+            ticTacToeView.enableAvailableGameButtons();
     }
     
     public void sendMove(String moveInfo) {
@@ -203,22 +203,22 @@ public class TicTacToeApplication extends Application implements SocketManager {
         else if (channel.startsWith("game/"+gameID)) {
             
             if (messageText.charAt(0) == 'O' || messageText.charAt(0) == 'X')
-                ticTacToeController.otherPlaceMove(messageText, false);
+                ticTacToeView.otherPlaceMove(messageText, false);
             else {
                 int i = Integer.parseInt(messageText.substring(messageText.length() - 1));
                 
                 if (messageText.startsWith("Win"))
-                    ticTacToeController.doGameOver(StateType.values()[i]);
+                    ticTacToeView.doGameOver(StateType.values()[i]);
                 else if (messageText.startsWith("Lose")) {
-                    ticTacToeController.otherPlaceMove(messageText.substring(5, 10), true);
-                    ticTacToeController.doGameOver(StateType.values()[i]);
+                    ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
+                    ticTacToeView.doGameOver(StateType.values()[i]);
                 }
                 else if (messageText.startsWith("Tie")) {
                     
                     if (messageText.charAt(4) == 'X' || messageText.charAt(4) == 'O')
-                        ticTacToeController.otherPlaceMove(messageText.substring(5, 10), true);
-                    
-                    ticTacToeController.doGameOver(StateType.values()[i]);
+                        ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
+    
+                    ticTacToeView.doGameOver(StateType.values()[i]);
                 }
             }
         }
