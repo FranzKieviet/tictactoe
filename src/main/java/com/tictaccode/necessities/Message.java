@@ -1,8 +1,9 @@
 package com.tictaccode.necessities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Message {
+public class Message implements Serializable {
     private String channel;
     private String message;
     
