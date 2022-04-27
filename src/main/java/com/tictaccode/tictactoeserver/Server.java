@@ -18,7 +18,7 @@ public class Server extends Application implements SocketManager {
     
     public static final int PORT = 8000;
     
-    private ServerController controller;
+    private ServerView controller;
     
     private Set<Connection> connections;
     
