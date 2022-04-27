@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Circle?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tictaccode.tictactoeclient.WelcomeController"
+      fx:id="pane" prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css">
+
+    <ImageView fx:id="backgroundPattern" preserveRatio="true" smooth="true">
+        <Image url="@images/BackgroundPattern2.png" />
+    </ImageView>
+
+    <Text fx:id="title" styleClass="title" text="Tic Tac Toe" />
+
+    <Button fx:id="singleplayerButton" styleClass="uiButton" text="Singleplayer" focusTraversable="false"
+            onMouseClicked="#goToSingleplayer" />
+    <Button fx:id="localMultiplayerButton" styleClass="uiButton" text="Local Multiplayer" focusTraversable="false"
+            onMouseClicked="#goToLocalMultiplayer" />
+    <Button fx:id="onlineMultiplayerButton" styleClass="uiButton" text="Online Multiplayer" focusTraversable="false"
+            onMouseClicked="#goToOnlineMultiplayer" />
+    <Button fx:id="exitButton" styleClass="uiButton" text="Exit" focusTraversable="false" onMouseClicked="#exitGame" />
+
+    <!-- displays the current version of the application -->
+    <Text fx:id="versionLabel" x="5" />
+
+    <Circle fx:id="fade" styleClass="fade" />
+</Pane>

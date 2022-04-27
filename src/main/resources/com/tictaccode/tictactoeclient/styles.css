@@ -1,0 +1,58 @@
+.root {
+    -fx-background-color: #252525;
+}
+
+.gameButtonFade {
+    -fx-fill: #252525;
+}
+
+.gameButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
+.uiButton {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: #F0F0F0;
+    -fx-text-alignment: center;
+}
+
+.xPiece {
+    -fx-stroke: #EE0000;
+}
+
+.oPiece {
+    -fx-stroke: #0000EE;
+    -fx-fill: rgba(0, 0, 0, 0);
+}
+
+#versionLabel {
+    -fx-font-family: Helvetica;
+    -fx-font-weight: bold;
+    -fx-font-alignment: center;
+    -fx-font-size: 12;
+    -fx-fill: #353535;
+}
+
+.fade {
+    -fx-fill: #505050;
+}
+
+.title {
+    -fx-font-size: 60;
+    -fx-fill: #F0F0F0;
+}
+
+#turnLabel {
+    -fx-font-size: 30;
+    -fx-fill: #F0F0F0;
+}
