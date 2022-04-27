@@ -205,20 +205,18 @@ public class TicTacToeApplication extends Application implements SocketManager {
             if (messageText.charAt(0) == 'O' || messageText.charAt(0) == 'X')
                 ticTacToeView.otherPlaceMove(messageText, false);
             else {
-                int i = Integer.parseInt(messageText.substring(messageText.length() - 1));
-                
                 if (messageText.startsWith("Win"))
-                    ticTacToeView.doGameOver(StateType.values()[i]);
+                    ticTacToeView.doGameOver((playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER));
                 else if (messageText.startsWith("Lose")) {
                     ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
-                    ticTacToeView.doGameOver(StateType.values()[i]);
+                    ticTacToeView.doGameOver((playerNumber == 1 ? StateType.O_WINNER : StateType.X_WINNER));
                 }
                 else if (messageText.startsWith("Tie")) {
                     
-                    if (messageText.charAt(4) == 'X' || messageText.charAt(4) == 'O')
+                    if (messageText.length() > 4 && (messageText.charAt(4) == 'X' || messageText.charAt(4) == 'O'))
                         ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
     
-                    ticTacToeView.doGameOver(StateType.values()[i]);
+                    ticTacToeView.doGameOver(StateType.DRAW);
                 }
             }
         }
