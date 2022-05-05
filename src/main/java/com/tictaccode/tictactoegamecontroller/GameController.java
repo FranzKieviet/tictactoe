@@ -49,14 +49,15 @@ public class GameController extends Application implements SocketManager {
             Socket socket = new Socket(HOST, PORT);
             connection = new Connection(socket, this);
             connection.sendMessage(new Message("CreateGame", "JoinChannel"));
-            
-            primaryStage.setOnCloseRequest((v) -> connection.closeSocket());
+            connection.sendMessage(new Message("CreateLocalGame", "JoinChannel"));
         }
         catch (Exception e) {
             // could not connect to the server
             System.err.println("The game could not connect to the server.");
             System.exit(1);
         }
+        
+        primaryStage.setOnCloseRequest((v) -> connection.closeSocket());
     
         Platform.runLater(() -> controller.showMessage("Game Controller started at " + new Date() + '\n'));
     }
@@ -70,7 +71,7 @@ public class GameController extends Application implements SocketManager {
     }
     
     @Override
-    public void handleReceivedMessage(Connection connection, Message message) {
+    public synchronized void handleReceivedMessage(Connection connection, Message message) {
         String channel = message.getChannel();
         String messageText = message.getMessage();
         
@@ -97,6 +98,11 @@ public class GameController extends Application implements SocketManager {
                 currentGameID++;
             }
         }
+        else if (channel.equals("CreateLocalGame")) {
+            long clientID = Long.parseLong(messageText);
+            games.put(currentGameID, new Game(this, currentGameID, clientID));
+            currentGameID++;
+        }
         else if (channel.startsWith("game/")) {
             String[] params = channel.split("/");
             long gameID = Long.parseLong(params[1]);
@@ -120,7 +126,7 @@ public class GameController extends Application implements SocketManager {
     }
     
     @Override
-    public void handleConnectionClosed(Connection connection) {
+    public synchronized void handleConnectionClosed(Connection connection) {
         System.out.println("The Game Controller has lost connection to the server.");
         System.exit(0);
     }
