@@ -62,6 +62,8 @@ public class ResultsView extends Controller {
         }
         else {
             switch (whoWon) {
+                case "PlayerLeft":
+                    tryAgainButton.setDisable(true);
                 case "You":
                     resultsLabel.setText("You won!");
                     break;

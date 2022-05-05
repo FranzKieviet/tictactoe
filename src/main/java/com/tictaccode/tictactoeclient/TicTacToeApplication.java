@@ -306,7 +306,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
                     else {
                         ticTacToeView.disableGameButtons();
                         Platform.runLater(() -> ticTacToeView.doGameOver(
-                                (playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER), "You"));
+                                (playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER), "PlayerLeft"));
                     }
                 }
                 else if (messageText.equals("TryAgain")) {
