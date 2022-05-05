@@ -291,23 +291,22 @@ public class TicTacToeView extends Controller {
      *
      */
     public void backMove() {
-        // TODO implement back move button
-//        Timeline fadeOut = Animations.getFadeOutTimeline(gameFade, 100);
-//        fadeOut.play();
-//        fadeOut.setOnFinished(e -> {
-//            try {
-//                application.startWelcomeScreen(stage);
-//            }
-//            catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
+        Timeline fadeOut = Animations.getFadeOutTimeline(gameFade, 100);
+        fadeOut.setOnFinished(e -> {
+            application.leaveGame();
+            try {
+                application.startWelcomeScreen(stage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        fadeOut.play();
     }
     
     
     private void showWinner(StateType stateType, String whoWon) {
         Timeline fadeOutAnimation = Animations.getFadeOutTimeline(gameFade, 500);
-        fadeOutAnimation.play();
         fadeOutAnimation.setOnFinished(e -> {
             try {
                 application.startResultsScreen(stage, stateType, gameType, whoWon);
@@ -316,6 +315,7 @@ public class TicTacToeView extends Controller {
                 ex.printStackTrace();
             }
         });
+        fadeOutAnimation.play();
     }
     
     public void doGameOver(StateType stateType, String whoWon) {
@@ -388,9 +388,9 @@ public class TicTacToeView extends Controller {
                     timeline = new Timeline();
                     break;
             }
-            
-            timeline.play();
+    
             timeline.setOnFinished(e -> showWinner(stateType, whoWon));
+            timeline.play();
         } else
             showWinner(stateType, whoWon);
     }

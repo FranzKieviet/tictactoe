@@ -141,7 +141,6 @@ public class WelcomeController extends Controller {
     public void goToSingleplayer() {
 //        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
 //
-//        fadeOut.play();
 //        fadeOut.setOnFinished(e -> {
 //            try {
 //                application.startSinglePlayerGame(stage);
@@ -150,13 +149,13 @@ public class WelcomeController extends Controller {
 //                ex.printStackTrace();
 //            }
 //        });
+//        fadeOut.play();
     }
     
     
     public void goToLocalMultiplayer() {
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
-
-        fadeOut.play();
+    
         fadeOut.setOnFinished(e -> {
             try {
                 application.startLocalMultiplayerGame(stage);
@@ -165,13 +164,13 @@ public class WelcomeController extends Controller {
                 ex.printStackTrace();
             }
         });
+        fadeOut.play();
     }
     
     
     public void goToOnlineMultiplayer() {
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
-
-        fadeOut.play();
+    
         fadeOut.setOnFinished(e -> {
             try {
                 application.startOnlineMultiplayerGame(stage);
@@ -180,6 +179,7 @@ public class WelcomeController extends Controller {
                 ex.printStackTrace();
             }
         });
+        fadeOut.play();
     }
     
     

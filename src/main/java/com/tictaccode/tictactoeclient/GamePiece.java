@@ -70,26 +70,21 @@ public class GamePiece {
                             oImage.getFitWidth() / 3))
             );
         }
-        
-        timeline.play();
+    
         timeline.setOnFinished(e -> {
             fade.setVisible(false);
-            
+        
             if (gameType == GameType.LOCAL_MULTIPLAYER)
                 controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
             else {
                 controller.getTurnLabel().setText((playerCurrentTurn ? "Opponent's Turn" : "Your Turn"));
                 controller.updateUI();
             }
-            
+        
             if (!hasLost && !playerCurrentTurn)
                 controller.enableAvailableGameButtons();
         });
-    }
-    
-    public void hidePiece() {
-        xImage.setOpacity(0);
-        oImage.setOpacity(0);
+        timeline.play();
     }
     
     public void toggleGameButton(boolean doEnable) {

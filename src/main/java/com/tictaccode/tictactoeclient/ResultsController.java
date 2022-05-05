@@ -156,7 +156,6 @@ public class ResultsController extends Controller {
     
     public void tryAgain() {
         // TODO implement try again button
-        goBack();
 //        FadeTransition resultsTransition = new FadeTransition(Duration.millis(500), resultsLabel);
 //        resultsTransition.setFromValue(1);
 //        resultsTransition.setToValue(0);
@@ -172,7 +171,6 @@ public class ResultsController extends Controller {
 //        ParallelTransition transition = new ParallelTransition(resultsTransition, tryAgainTransition,
 //                backTransition);
 //
-//        transition.play();
 //        transition.setOnFinished(e -> {
 //            try {
 //                switch (gameType) {
@@ -194,6 +192,8 @@ public class ResultsController extends Controller {
 //                ex.printStackTrace();
 //            }
 //        });
+//        transition.play();
+//
     }
     
     
@@ -213,7 +213,6 @@ public class ResultsController extends Controller {
         ParallelTransition transition = new ParallelTransition(resultsTransition, tryAgainTransition,
                 backTransition);
     
-        transition.play();
         transition.setOnFinished(e -> {
             try {
                 application.startWelcomeScreen(stage);
@@ -222,5 +221,6 @@ public class ResultsController extends Controller {
                 ex.printStackTrace();
             }
         });
+        transition.play();
     }
 }
