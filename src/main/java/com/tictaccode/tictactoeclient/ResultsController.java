@@ -26,6 +26,8 @@ public class ResultsController extends Controller {
     
     private GameType gameType;
     
+    private String whoWon;
+    
     
     public void initialize() {
         resultsLabel.setFont(Fonts.GAME_FONT);
@@ -46,15 +48,29 @@ public class ResultsController extends Controller {
     
     @Override
     public void startUI() {
-        switch (stateType) {
-            case X_WINNER:
-                resultsLabel.setText("X wins!");
-                break;
-            case O_WINNER:
-                resultsLabel.setText("O wins!");
-                break;
-            default:
-                resultsLabel.setText("Cat's game!");
+        if (gameType == GameType.LOCAL_MULTIPLAYER) {
+            switch (stateType) {
+                case X_WINNER:
+                    resultsLabel.setText("X wins!");
+                    break;
+                case O_WINNER:
+                    resultsLabel.setText("O wins!");
+                    break;
+                default:
+                    resultsLabel.setText("Cat's game!");
+            }
+        }
+        else {
+            switch (whoWon) {
+                case "You":
+                    resultsLabel.setText("You won!");
+                    break;
+                case "Opponent":
+                    resultsLabel.setText("You lost!");
+                    break;
+                default:
+                    resultsLabel.setText("Cat's game!");
+            }
         }
     
         stage.setResizable(true);
@@ -86,10 +102,12 @@ public class ResultsController extends Controller {
     
         resultsLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 60 * Math.min(sceneWidth, sceneHeight) / 600));
         
-        if (resultsLabel.getText().equals("Cat's game!"))
+        if (stateType == StateType.DRAW)
             resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 3.4);
-        else
+        else if (gameType == GameType.LOCAL_MULTIPLAYER)
             resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 1.8);
+        else if (whoWon != null)
+            resultsLabel.setX(sceneWidth / 2 - resultsLabel.getFont().getSize() * 2.5);
         
         resultsLabel.setY(resultsLabel.getFont().getSize() * 1.5);
     
@@ -128,6 +146,11 @@ public class ResultsController extends Controller {
     
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+    
+    
+    public void setWhoWon(String whoWon) {
+        this.whoWon = whoWon;
     }
     
     

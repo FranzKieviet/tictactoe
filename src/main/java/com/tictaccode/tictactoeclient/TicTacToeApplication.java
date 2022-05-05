@@ -160,7 +160,9 @@ public class TicTacToeApplication extends Application implements SocketManager {
         
         primaryStage.setScene(ticTacToeScene);
         primaryStage.show();
+        
         ticTacToeView.startUI();
+        ticTacToeView.setPlayerTurn((playerNumber == 1 || playerNumber == 3));
         ticTacToeView.fadeIn();
         
         if (playerNumber == 1 || playerNumber == 3)
@@ -187,7 +189,8 @@ public class TicTacToeApplication extends Application implements SocketManager {
 //        ticTacToeController.fadeIn();
 //    }
     
-    public void startResultsScreen(Stage primaryStage, StateType stateType, GameType gameType) throws Exception {
+    public void startResultsScreen(Stage primaryStage, StateType stateType, GameType gameType,
+                                   String whoWon) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("results-view.fxml"));
         Scene resultsScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
         
@@ -196,6 +199,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
         resultsController.setStage(primaryStage);
         resultsController.setStateType(stateType);
         resultsController.setGameType(gameType);
+        resultsController.setWhoWon(whoWon);
         
         primaryStage.setScene(resultsScene);
         primaryStage.show();
@@ -224,29 +228,34 @@ public class TicTacToeApplication extends Application implements SocketManager {
             if (isLocalMultiplayer) {
                 if (messageText.equals("Continue"))
                     ticTacToeView.enableAvailableGameButtons();
-                else if (messageText.startsWith("Win"))
-                    Platform.runLater(() -> ticTacToeView.doGameOver(
-                            (messageText.charAt(4) == 'X' ? StateType.X_WINNER : StateType.O_WINNER)));
+                else if (messageText.startsWith("Win")) {
+                    if (messageText.charAt(4) == 'X')
+                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.X_WINNER, "X"));
+                    else
+                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.O_WINNER, "O"));
+                }
                 else if (messageText.equals("Tie"))
-                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW));
+                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW, "Tie"));
             }
             else {
                 if (messageText.charAt(0) == 'O' || messageText.charAt(0) == 'X')
                     ticTacToeView.otherPlaceMove(messageText, false);
                 else if (messageText.startsWith("Win"))
                     Platform.runLater(() ->
-                            ticTacToeView.doGameOver((playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER)));
+                            ticTacToeView.doGameOver((playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER),
+                                    "You"));
                 else if (messageText.startsWith("Lose")) {
                     ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
                     Platform.runLater(() ->
-                            ticTacToeView.doGameOver((playerNumber == 1 ? StateType.O_WINNER : StateType.X_WINNER)));
+                            ticTacToeView.doGameOver((playerNumber == 1 ? StateType.O_WINNER : StateType.X_WINNER),
+                                    "Opponent"));
                 }
                 else if (messageText.startsWith("Tie")) {
         
                     if (messageText.length() > 4 && (messageText.charAt(4) == 'X' || messageText.charAt(4) == 'O'))
                         ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
         
-                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW));
+                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW, "Tie"));
                 }
             }
         }

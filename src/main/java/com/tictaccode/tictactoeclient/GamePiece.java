@@ -49,7 +49,7 @@ public class GamePiece {
         fade.setCenterY(newY + pieceSize / 2);
     }
     
-    public void showPiece(double boardWidth, TicTacToeView controller, boolean playerCurrentTurn,
+    public void showPiece(double boardWidth, TicTacToeView controller, GameType gameType, boolean playerCurrentTurn,
                           boolean hasLost) {
         if (playType == PlayType.NOTHING) return;
         
@@ -75,7 +75,12 @@ public class GamePiece {
         timeline.setOnFinished(e -> {
             fade.setVisible(false);
             
-            controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
+            if (gameType == GameType.LOCAL_MULTIPLAYER)
+                controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
+            else {
+                controller.getTurnLabel().setText((playerCurrentTurn ? "Opponent's Turn" : "Your Turn"));
+                controller.updateUI();
+            }
             
             if (!hasLost && !playerCurrentTurn)
                 controller.enableAvailableGameButtons();

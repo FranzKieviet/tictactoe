@@ -82,7 +82,6 @@ public class TicTacToeView extends Controller {
         
         // initializes the turn count
         turnCount = 1;
-        turnLabel.setText("X's Turn");
         
         backButton.setFont(Fonts.GAME_FONT);
         
@@ -130,8 +129,16 @@ public class TicTacToeView extends Controller {
         backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
         
         turnLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
-        turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 2.3);
         turnLabel.setY(turnLabel.getFont().getSize() * 1.5);
+    
+        if (gameType == GameType.LOCAL_MULTIPLAYER)
+            turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 2.3);
+        else {
+            if (turnLabel.getText().startsWith("Your"))
+                turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 3.1);
+            else
+                turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 4.5);
+        }
         
         double boardImageSize = boardImage.getFitWidth();
         
@@ -180,6 +187,16 @@ public class TicTacToeView extends Controller {
     }
     
     
+    public void setPlayerTurn(boolean playerCurrentTurn) {
+        if (gameType == GameType.LOCAL_MULTIPLAYER)
+            turnLabel.setText((turnCount % 2 == 1 ? "X's Turn" : "O's Turn"));
+        else {
+            turnLabel.setText((playerCurrentTurn ? "Your Turn" : "Opponent's Turn"));
+            updateUI();
+        }
+    }
+    
+    
     /**
      * Disables all the game buttons on the tic-tac-toe board.
      */
@@ -224,7 +241,7 @@ public class TicTacToeView extends Controller {
         // displays the move to the user
         GamePiece gamePiece = gamePieces[x + y * 3];
         gamePiece.setPiece(playType);
-        gamePiece.showPiece(boardImage.getFitWidth(), this, false, hasLost);
+        gamePiece.showPiece(boardImage.getFitWidth(), this, gameType, false, hasLost);
     }
     
     
@@ -263,7 +280,7 @@ public class TicTacToeView extends Controller {
         // displays the move to the user
         GamePiece gamePiece = gamePieces[idNum - 1];
         gamePiece.setPiece(playType);
-        gamePiece.showPiece(boardImage.getFitWidth(), this, true, false);
+        gamePiece.showPiece(boardImage.getFitWidth(), this, gameType, true, false);
         
         application.sendMove((playType == PlayType.X ? "X" : "O") + " " + y + " " + x);
     }
@@ -288,12 +305,12 @@ public class TicTacToeView extends Controller {
     }
     
     
-    private void showWinner(StateType stateType) {
+    private void showWinner(StateType stateType, String whoWon) {
         Timeline fadeOutAnimation = Animations.getFadeOutTimeline(gameFade, 500);
         fadeOutAnimation.play();
         fadeOutAnimation.setOnFinished(e -> {
             try {
-                application.startResultsScreen(stage, stateType, gameType);
+                application.startResultsScreen(stage, stateType, gameType, whoWon);
             }
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -301,7 +318,7 @@ public class TicTacToeView extends Controller {
         });
     }
     
-    public void doGameOver(StateType stateType) {
+    public void doGameOver(StateType stateType, String whoWon) {
         stage.setResizable(false);
         backButton.setDisable(true);
         
@@ -373,9 +390,9 @@ public class TicTacToeView extends Controller {
             }
             
             timeline.play();
-            timeline.setOnFinished(e -> showWinner(stateType));
+            timeline.setOnFinished(e -> showWinner(stateType, whoWon));
         } else
-            showWinner(stateType);
+            showWinner(stateType, whoWon);
     }
     
     public GameOverInfo checkState() {
