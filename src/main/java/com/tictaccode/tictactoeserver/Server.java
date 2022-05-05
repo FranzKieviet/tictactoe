@@ -84,7 +84,7 @@ public class Server extends Application implements SocketManager {
     }
     
     @Override
-    public void handleReceivedMessage(Connection connection, Message message) {
+    public synchronized void handleReceivedMessage(Connection connection, Message message) {
         String channel = message.getChannel();
         String messageText = message.getMessage();
         
@@ -107,7 +107,7 @@ public class Server extends Application implements SocketManager {
     }
     
     @Override
-    public void handleConnectionClosed(Connection connection) {
+    public synchronized void handleConnectionClosed(Connection connection) {
         Platform.runLater(() -> controller.showMessage(
                 connection.getSocket().getInetAddress().getHostAddress() + " has disconnected.\n"));
         connections.remove(connection);
