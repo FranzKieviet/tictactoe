@@ -9,13 +9,13 @@
 <?import javafx.scene.text.Text?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:id="pane" fx:controller="com.tictaccode.tictactoeclient.ResultsController"
+      fx:id="pane" fx:controller="com.tictaccode.tictactoeclient.ResultsView"
       prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css" style="-fx-background-color: #505050;">
 
     <Text fx:id="resultsLabel" styleClass="title" opacity="0" />
 
     <Button fx:id="tryAgainButton" styleClass="uiButton" focusTraversable="false" text="Try Again" opacity="0"
-            onMouseClicked="#tryAgain" />
+            onMouseClicked="#attemptTryAgain" />
     <Button fx:id="backButton" styleClass="uiButton" focusTraversable="false" text="Back" opacity="0"
             onMouseClicked="#goBack" />
 </Pane>

@@ -57,6 +57,8 @@ public class TicTacToeView extends Controller {
     
     private GameType gameType;
     
+    private boolean isGameOver;
+    
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -67,6 +69,8 @@ public class TicTacToeView extends Controller {
         versionLabel.setText(TicTacToeApplication.VERSION);
         
         turnLabel.setFont(Fonts.GAME_FONT);
+        
+        isGameOver = false;
         
         // adds all ui info about game pieces to a GamePiece array for ease of use
         gamePieces = new GamePiece[9];
@@ -227,6 +231,10 @@ public class TicTacToeView extends Controller {
         return turnCount;
     }
     
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+    
     
     public void otherPlaceMove(String moveInfo, boolean hasLost) {
         // sets what type of piece the user is playing based on the turn count
@@ -291,9 +299,12 @@ public class TicTacToeView extends Controller {
      *
      */
     public void backMove() {
+        backButton.setDisable(true);
+        disableGameButtons();
+        
         Timeline fadeOut = Animations.getFadeOutTimeline(gameFade, 100);
+        application.leaveGame();
         fadeOut.setOnFinished(e -> {
-            application.leaveGame();
             try {
                 application.startWelcomeScreen(stage);
             }
@@ -319,6 +330,7 @@ public class TicTacToeView extends Controller {
     }
     
     public void doGameOver(StateType stateType, String whoWon) {
+        isGameOver = true;
         stage.setResizable(false);
         backButton.setDisable(true);
         

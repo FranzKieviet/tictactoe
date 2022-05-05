@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class ResultsController extends Controller {
+public class ResultsView extends Controller {
     
     @FXML
     private Pane pane;
@@ -154,50 +154,42 @@ public class ResultsController extends Controller {
     }
     
     
+    public void disableTryAgain() {
+        tryAgainButton.setDisable(true);
+    }
+    
+    
+    public void attemptTryAgain() {
+        tryAgainButton.setDisable(true);
+        application.tryAgain();
+    }
+    
+    
     public void tryAgain() {
-        // TODO implement try again button
-//        FadeTransition resultsTransition = new FadeTransition(Duration.millis(500), resultsLabel);
-//        resultsTransition.setFromValue(1);
-//        resultsTransition.setToValue(0);
-//
-//        FadeTransition tryAgainTransition = new FadeTransition(Duration.millis(500), tryAgainButton);
-//        tryAgainTransition.setFromValue(1);
-//        tryAgainTransition.setToValue(0);
-//
-//        FadeTransition backTransition = new FadeTransition(Duration.millis(500), backButton);
-//        backTransition.setFromValue(1);
-//        backTransition.setToValue(0);
-//
-//        ParallelTransition transition = new ParallelTransition(resultsTransition, tryAgainTransition,
-//                backTransition);
-//
-//        transition.setOnFinished(e -> {
-//            try {
-//                switch (gameType) {
-////                    case SINGLEPLAYER:
-////                        application.startSinglePlayerGame(stage);
-////                        break;
-////                    case LOCAL_MULTIPLAYER:
-////                        application.startLocalMultiplayerGame(stage);
-////                        break;
-//                    case ONLINE_MULTIPLAYER:
-//                        application.startOnlineMultiplayerGame(stage);
-//                        break;
-//                    default: break;
-//
-//                }
-//
-//            }
-//            catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        transition.play();
-//
+        FadeTransition resultsTransition = new FadeTransition(Duration.millis(500), resultsLabel);
+        resultsTransition.setFromValue(1);
+        resultsTransition.setToValue(0);
+
+        FadeTransition tryAgainTransition = new FadeTransition(Duration.millis(500), tryAgainButton);
+        tryAgainTransition.setFromValue(1);
+        tryAgainTransition.setToValue(0);
+
+        FadeTransition backTransition = new FadeTransition(Duration.millis(500), backButton);
+        backTransition.setFromValue(1);
+        backTransition.setToValue(0);
+
+        ParallelTransition transition = new ParallelTransition(resultsTransition, tryAgainTransition,
+                backTransition);
+
+        transition.setOnFinished(e -> application.startGame(stage, gameType));
+        transition.play();
     }
     
     
     public void goBack() {
+        backButton.setDisable(true);
+        tryAgainButton.setDisable(true);
+        
         FadeTransition resultsTransition = new FadeTransition(Duration.millis(500), resultsLabel);
         resultsTransition.setFromValue(1);
         resultsTransition.setToValue(0);
@@ -212,7 +204,8 @@ public class ResultsController extends Controller {
     
         ParallelTransition transition = new ParallelTransition(resultsTransition, tryAgainTransition,
                 backTransition);
-    
+        
+        application.leaveGame();
         transition.setOnFinished(e -> {
             try {
                 application.startWelcomeScreen(stage);

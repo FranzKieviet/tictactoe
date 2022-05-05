@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class WelcomeController extends Controller {
+public class WelcomeView extends Controller {
     
     @FXML
     private Pane pane;
@@ -139,6 +139,7 @@ public class WelcomeController extends Controller {
     
     
     public void goToSingleplayer() {
+//        toggleButtons(true);
 //        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
 //
 //        fadeOut.setOnFinished(e -> {
@@ -154,6 +155,7 @@ public class WelcomeController extends Controller {
     
     
     public void goToLocalMultiplayer() {
+        toggleButtons(true);
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
     
         fadeOut.setOnFinished(e -> {
@@ -169,6 +171,7 @@ public class WelcomeController extends Controller {
     
     
     public void goToOnlineMultiplayer() {
+        toggleButtons(true);
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
     
         fadeOut.setOnFinished(e -> {
@@ -184,6 +187,15 @@ public class WelcomeController extends Controller {
     
     
     public void exitGame() {
+        toggleButtons(true);
         application.exitGame();
+    }
+    
+    
+    public void toggleButtons(boolean disable) {
+        singleplayerButton.setDisable(disable);
+        localMultiplayerButton.setDisable(disable);
+        onlineMultiplayerButton.setDisable(disable);
+        exitButton.setDisable(disable);
     }
 }
