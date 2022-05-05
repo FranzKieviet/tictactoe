@@ -86,13 +86,7 @@ public class GameController extends Application implements SocketManager {
                 clientID2 = clientID;
             
             if (clientID1 != -1 && clientID2 != -1) {
-                int whoFirst = (int) (Math.random() * 2);
-                
-                if (whoFirst == 0)
-                    games.put(currentGameID, new Game(this, currentGameID, clientID1, clientID2));
-                else
-                    games.put(currentGameID, new Game(this, currentGameID, clientID2, clientID1));
-                
+                games.put(currentGameID, new Game(this, currentGameID, clientID1, clientID2));
                 clientID1 = -1;
                 clientID2 = -1;
                 currentGameID++;
@@ -112,6 +106,8 @@ public class GameController extends Application implements SocketManager {
                 
                 if (messageText.equals("LeaveGame"))
                     games.get(gameID).leaveGame(clientID);
+                else if (messageText.equals("TryAgain"))
+                    games.get(gameID).willTryAgain(clientID);
                 else {
                     params = messageText.split(" ");
                     PlayType playType;

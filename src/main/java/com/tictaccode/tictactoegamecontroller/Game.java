@@ -4,7 +4,7 @@ public class Game {
     private GameController gameController;
     
     private long gameID, client1ID, client2ID;
-    private boolean isP1Turn;
+    private boolean isP1Turn, c1TryAgain, c2TryAgain;
     private Board board;
     
     public Game(GameController gameController, long gameID, long clientID) {
@@ -13,8 +13,7 @@ public class Game {
         this.client1ID = clientID;
         this.client2ID = clientID;
         
-        isP1Turn = true;
-        board = new Board();
+        createGame();
         
         this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client1ID, "JoinChannel");
         
@@ -27,14 +26,20 @@ public class Game {
         this.client1ID = client1ID;
         this.client2ID = client2ID;
         
-        isP1Turn = true;
-        board = new Board();
+        createGame();
     
         this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client1ID, "JoinChannel");
         this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client2ID, "JoinChannel");
         
         this.gameController.sendGameInfo(Long.toString(this.client1ID), "GameCreated 1 " + this.gameID);
         this.gameController.sendGameInfo(Long.toString(this.client2ID), "GameCreated 2 " + this.gameID);
+    }
+    
+    public void createGame() {
+        c1TryAgain = false;
+        c2TryAgain = false;
+        isP1Turn = true;
+        board = new Board();
     }
     
     public void doMove(int x, int y, PlayType playType, long clientID) {
@@ -45,15 +50,12 @@ public class Game {
                 switch (board.checkState()) {
                     case X_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win X");
-                        closeGame();
                         break;
                     case O_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win O");
-                        closeGame();
                         break;
                     case DRAW:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Tie");
-                        closeGame();
                         break;
                     default:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Continue");
@@ -64,17 +66,14 @@ public class Game {
                     case X_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win");
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Lose "+playType+" "+y+" "+x);
-                        closeGame();
                         break;
                     case O_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Lose "+playType+" "+y+" "+x);
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Win");
-                        closeGame();
                         break;
                     case DRAW:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Tie");
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Tie");
-                        closeGame();
                         break;
                     default:
                         gameController.sendGameInfo("game/"+gameID+"/"+(isP1Turn ? client2ID : client1ID),
@@ -86,15 +85,33 @@ public class Game {
         }
     }
     
-    public void leaveGame(long clientID) {
-        if (clientID == client1ID) {
-            gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "LeaveGame");
-            closeGame();
+    public void willTryAgain(long clientID) {
+        if (client1ID == client2ID) {
+            createGame();
+            return;
+        }
+        else if (clientID == client1ID) {
+            c1TryAgain = true;
+            gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "TryAgain");
         }
         else if (clientID == client2ID) {
-            gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "LeaveGame");
-            closeGame();
+            c2TryAgain = true;
+            gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "TryAgain");
         }
+        
+        if (c1TryAgain && c2TryAgain)
+            createGame();
+    }
+    
+    public void leaveGame(long clientID) {
+        if (client1ID != client2ID) {
+            if (clientID == client1ID)
+                gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "LeaveGame");
+            else if (clientID == client2ID)
+                gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "LeaveGame");
+        }
+        
+        closeGame();
     }
     
     private void closeGame() {
