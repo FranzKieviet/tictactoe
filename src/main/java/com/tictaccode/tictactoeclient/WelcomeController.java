@@ -154,17 +154,17 @@ public class WelcomeController extends Controller {
     
     
     public void goToLocalMultiplayer() {
-//        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
-//
-//        fadeOut.play();
-//        fadeOut.setOnFinished(e -> {
-//            try {
-//                application.startLocalMultiplayerGame(stage);
-//            }
-//            catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
+        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
+
+        fadeOut.play();
+        fadeOut.setOnFinished(e -> {
+            try {
+                application.startLocalMultiplayerGame(stage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     
     

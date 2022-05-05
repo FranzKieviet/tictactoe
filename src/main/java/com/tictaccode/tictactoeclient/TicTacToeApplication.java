@@ -32,7 +32,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
     
     private TicTacToeView ticTacToeView;
     
-    private boolean isFirst = true;
+    private boolean isFirst, isLocalMultiplayer;
     
     /**
      * Loads the initial scene, creates the window, then displays the scene on the window.
@@ -45,6 +45,9 @@ public class TicTacToeApplication extends Application implements SocketManager {
         primaryStage.setMinWidth(MIN_WIDTH);
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setTitle("Tic Tac Toe");
+    
+        // gets whether it is the first time loading the main menu
+        isFirst = true;
         
         clientID = -1;
         gameID = -1;
@@ -54,14 +57,14 @@ public class TicTacToeApplication extends Application implements SocketManager {
         try {
             Socket socket = new Socket(HOST, PORT);
             connection = new Connection(socket, this);
-            
-            primaryStage.setOnCloseRequest((v) -> exitGame());
         }
         catch (Exception e) {
             // could not connect to the server
             System.err.println("The game could not connect to the server.");
             System.exit(1);
         }
+    
+        primaryStage.setOnCloseRequest((v) -> exitGame());
         
         startWelcomeScreen(primaryStage);
     }
@@ -69,6 +72,8 @@ public class TicTacToeApplication extends Application implements SocketManager {
     public void startWelcomeScreen(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("welcome-view.fxml"));
         Scene welcomeScene;
+    
+        isLocalMultiplayer = false;
         
         if (isFirst)
             welcomeScene = new Scene(fxmlLoader.load());
@@ -87,7 +92,30 @@ public class TicTacToeApplication extends Application implements SocketManager {
             isFirst = false;
         else
             welcomeController.fadeIn();
+    }
+    
+    public void startLocalMultiplayerGame(Stage primaryStage) {
+        System.out.println(clientID);
+        if (clientID == -1)
+            return;
+    
+        isLocalMultiplayer = true;
+    
+        System.out.println("Sending create game message");
+        connection.sendMessage(new Message("CreateLocalGame", Long.toString(clientID)));
         
+        new Thread(() -> {
+            try {
+                System.out.println("Waiting for game to be created");
+                while (gameID == -1)
+                    Thread.sleep(10);
+                Platform.runLater(() -> startGame(primaryStage, GameType.LOCAL_MULTIPLAYER));
+            }
+            catch (InterruptedException e) {
+                System.err.println("Error while waiting for game ID.");
+                System.exit(1);
+            }
+        }).start();
     }
     
     public void startOnlineMultiplayerGame(Stage primaryStage) {
@@ -135,29 +163,13 @@ public class TicTacToeApplication extends Application implements SocketManager {
         ticTacToeView.startUI();
         ticTacToeView.fadeIn();
         
-        if (playerNumber == 1)
+        if (playerNumber == 1 || playerNumber == 3)
             ticTacToeView.enableAvailableGameButtons();
     }
     
     public void sendMove(String moveInfo) {
         connection.sendMessage(new Message("game/"+gameID+"/"+clientID, moveInfo));
     }
-    
-    // TODO Add local multiplayer game here
-//    public void startLocalMultiplayerGame(Stage primaryStage) throws Exception {
-//        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
-//        Scene ticTacToeScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
-//
-//        TicTacToeController ticTacToeController = fxmlLoader.getController();
-//        ticTacToeController.setApplication(this);
-//        ticTacToeController.setStage(primaryStage);
-//        ticTacToeController.setGameType(GameType.LOCAL_MULTIPLAYER);
-//
-//        primaryStage.setScene(ticTacToeScene);
-//        primaryStage.show();
-//        ticTacToeController.startUI();
-//        ticTacToeController.fadeIn();
-//    }
     
     // TODO Add single-player game here once AI component is finished
 //    public void startSinglePlayerGame(Stage primaryStage) throws Exception {
@@ -191,7 +203,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
     }
     
     @Override
-    public void handleReceivedMessage(Connection connection, Message message) {
+    public synchronized void handleReceivedMessage(Connection connection, Message message) {
         String channel = message.getChannel();
         String messageText = message.getMessage();
         
@@ -209,10 +221,19 @@ public class TicTacToeApplication extends Application implements SocketManager {
         }
         else if (channel.startsWith("game/"+gameID)) {
             
-            if (messageText.charAt(0) == 'O' || messageText.charAt(0) == 'X')
-                ticTacToeView.otherPlaceMove(messageText, false);
+            if (isLocalMultiplayer) {
+                if (messageText.equals("Continue"))
+                    ticTacToeView.enableAvailableGameButtons();
+                else if (messageText.startsWith("Win"))
+                    Platform.runLater(() -> ticTacToeView.doGameOver(
+                            (messageText.charAt(4) == 'X' ? StateType.X_WINNER : StateType.O_WINNER)));
+                else if (messageText.equals("Tie"))
+                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW));
+            }
             else {
-                if (messageText.startsWith("Win"))
+                if (messageText.charAt(0) == 'O' || messageText.charAt(0) == 'X')
+                    ticTacToeView.otherPlaceMove(messageText, false);
+                else if (messageText.startsWith("Win"))
                     Platform.runLater(() ->
                             ticTacToeView.doGameOver((playerNumber == 1 ? StateType.X_WINNER : StateType.O_WINNER)));
                 else if (messageText.startsWith("Lose")) {
@@ -221,10 +242,10 @@ public class TicTacToeApplication extends Application implements SocketManager {
                             ticTacToeView.doGameOver((playerNumber == 1 ? StateType.O_WINNER : StateType.X_WINNER)));
                 }
                 else if (messageText.startsWith("Tie")) {
-                    
+        
                     if (messageText.length() > 4 && (messageText.charAt(4) == 'X' || messageText.charAt(4) == 'O'))
                         ticTacToeView.otherPlaceMove(messageText.substring(5, 10), true);
-                    
+        
                     Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW));
                 }
             }
@@ -232,7 +253,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
     }
     
     @Override
-    public void handleConnectionClosed(Connection connection) {
+    public synchronized void handleConnectionClosed(Connection connection) {
         System.out.println("The game has lost connection to the server.");
         System.exit(0);
     }
