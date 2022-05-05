@@ -109,18 +109,23 @@ public class GameController extends Application implements SocketManager {
             
             if (games.containsKey(gameID)) {
                 long clientID = Long.parseLong(params[2]);
-                params = messageText.split(" ");
-                PlayType playType;
                 
-                if (params[0].equals("X"))
-                    playType = PlayType.X;
-                else if (params[0].equals("O"))
-                    playType = PlayType.O;
-                else
-                    return;
-                
-                games.get(gameID).doMove(Integer.parseInt(params[2]), Integer.parseInt(params[1]), playType,
-                        clientID);
+                if (messageText.equals("LeaveGame"))
+                    games.get(gameID).leaveGame(clientID);
+                else {
+                    params = messageText.split(" ");
+                    PlayType playType;
+    
+                    if (params[0].equals("X"))
+                        playType = PlayType.X;
+                    else if (params[0].equals("O"))
+                        playType = PlayType.O;
+                    else
+                        return;
+    
+                    games.get(gameID).doMove(Integer.parseInt(params[2]), Integer.parseInt(params[1]), playType,
+                            clientID);
+                }
             }
         }
     }

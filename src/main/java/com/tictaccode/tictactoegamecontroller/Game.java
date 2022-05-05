@@ -86,6 +86,17 @@ public class Game {
         }
     }
     
+    public void leaveGame(long clientID) {
+        if (clientID == client1ID) {
+            gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "LeaveGame");
+            closeGame();
+        }
+        else if (clientID == client2ID) {
+            gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "LeaveGame");
+            closeGame();
+        }
+    }
+    
     private void closeGame() {
         this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client1ID, "ExitChannel");
         
@@ -93,25 +104,5 @@ public class Game {
             this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client2ID, "ExitChannel");
         
         gameController.gameFinished(gameID);
-    }
-    
-    public long getGameID() {
-        return gameID;
-    }
-    
-    public long getClient1ID() {
-        return client1ID;
-    }
-    
-    public long getClient2ID() {
-        return client2ID;
-    }
-    
-    public void setClient1ID(long client1ID) {
-        this.client1ID = client1ID;
-    }
-    
-    public void setClient2ID(long client2ID) {
-        this.client2ID = client2ID;
     }
 }
