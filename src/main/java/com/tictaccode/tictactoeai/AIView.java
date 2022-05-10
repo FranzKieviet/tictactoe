@@ -1,4 +1,4 @@
-package com.tictaccode.tictactoegamecontroller;
+package com.tictaccode.tictactoeai;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;

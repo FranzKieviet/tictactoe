@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.tictaccode.tictactoegamecontroller/com.tictaccode.tictactoegamecontroller.HelloApplication
+                                com.tictaccode.tictactoegamecontroller/com.tictaccode.tictactoeai.HelloApplication
                             </mainClass>
                         </configuration>
                     </execution>

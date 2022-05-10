@@ -6,7 +6,7 @@
 
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.tictaccode.tictactoegamecontroller.AIView"
+      fx:controller="com.tictaccode.tictactoeai.AIView"
       prefHeight="200.0" prefWidth="450.0">
     <TextArea fx:id="ta" editable="false" wrapText="false" prefHeight="200.0" prefWidth="450.0" />
 </Pane>
