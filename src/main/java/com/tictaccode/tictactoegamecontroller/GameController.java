@@ -11,10 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameController extends Application implements SocketManager {
     
@@ -25,13 +22,12 @@ public class GameController extends Application implements SocketManager {
     
     private Connection connection;
     private Map<Long, Game> games;
-    private long currentGameID, clientID1, clientID2;
+    private Map<String, Long> availableServers;
+    private long currentGameID;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
         currentGameID = 1;
-        clientID1 = -1;
-        clientID2 = -1;
         
         // creates and shows the console for the game controller component
         FXMLLoader fxmlLoader = new FXMLLoader(GameController.class.getResource("game-controller-view.fxml"));
@@ -43,12 +39,16 @@ public class GameController extends Application implements SocketManager {
         primaryStage.show();
         
         games = Collections.synchronizedMap(new HashMap<>());
+        availableServers = Collections.synchronizedMap(new HashMap<>());
         
         // creates client socket to connect to the server
         try {
             Socket socket = new Socket(HOST, PORT);
             connection = new Connection(socket, this);
-            connection.sendMessage(new Message("CreateGame", "JoinChannel"));
+            connection.sendMessage(new Message("CreateServer", "JoinChannel"));
+            connection.sendMessage(new Message("JoinServer", "JoinChannel"));
+            connection.sendMessage(new Message("CancelServer", "JoinChannel"));
+            connection.sendMessage(new Message("GetServers", "JoinChannel"));
             connection.sendMessage(new Message("CreateLocalGame", "JoinChannel"));
         }
         catch (Exception e) {
@@ -77,20 +77,42 @@ public class GameController extends Application implements SocketManager {
         
         controller.showMessage(channel + ": " + messageText + '\n');
         
-        if (channel.equals("CreateGame")) {
-            long clientID = Long.parseLong(messageText);
+        if (channel.equals("CreateServer")) {
+            int index = messageText.indexOf(' ');
             
-            if (clientID1 == -1)
-                clientID1 = clientID;
-            else if (clientID2 == -1)
-                clientID2 = clientID;
+            availableServers.put(messageText.substring(index + 1), Long.valueOf(messageText.substring(0, index)));
             
-            if (clientID1 != -1 && clientID2 != -1) {
-                games.put(currentGameID, new Game(this, currentGameID, clientID1, clientID2));
-                clientID1 = -1;
-                clientID2 = -1;
-                currentGameID++;
+            connection.sendMessage(new Message("GetServers", "add " + messageText.substring(index + 1)));
+        }
+        else if (channel.equals("JoinServer")) {
+            int index = messageText.indexOf(' ');
+            
+            long clientID1 = availableServers.get(messageText.substring(index + 1));
+            long clientID2 = Long.parseLong(messageText.substring(0, index));
+            
+            games.put(currentGameID, new Game(this, currentGameID, clientID1, clientID2));
+            currentGameID++;
+            
+            availableServers.remove(messageText.substring(index + 1));
+            connection.sendMessage(
+                    new Message("GetServers", "remove " + messageText.substring(index + 1)));
+        }
+        else if (channel.equals("CancelServer")) {
+            int index = messageText.indexOf(' ');
+            
+            if (Objects.equals(availableServers.get(messageText.substring(index + 1)),
+                    Long.valueOf(messageText.substring(0, index)))) {
+                availableServers.remove(messageText.substring(index + 1));
+                connection.sendMessage(
+                        new Message("GetServers", "remove " + messageText.substring(index + 1)));
             }
+        }
+        else if (channel.equals("GetServers")) {
+            String[] params = messageText.split(" ");
+            
+            if (params[0].equals("GetAllServers"))
+                availableServers.forEach((k, v) ->
+                        connection.sendMessage(new Message(params[1], "AddServer " + k)));
         }
         else if (channel.equals("CreateLocalGame")) {
             long clientID = Long.parseLong(messageText);
