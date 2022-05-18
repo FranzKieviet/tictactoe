@@ -173,18 +173,18 @@ public class WelcomeView extends Controller {
     
     
     public void goToSingleplayer() {
-//        toggleButtons(true);
-//        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
-//
-//        fadeOut.setOnFinished(e -> {
-//            try {
-//                application.startSinglePlayerGame(stage);
-//            }
-//            catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        fadeOut.play();
+        toggleButtons(true);
+        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
+
+        fadeOut.setOnFinished(e -> {
+            try {
+                application.startSinglePlayerGame(stage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        fadeOut.play();
     }
     
     

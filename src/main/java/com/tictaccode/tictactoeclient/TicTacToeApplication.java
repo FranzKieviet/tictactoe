@@ -41,7 +41,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
     
     private ResultsView resultsView;
     
-    private boolean isFirst, isLocalMultiplayer, willTryAgain, hasLeft, isCanceled;
+    private boolean isFirst, isLocalMultiplayer, isSinglePlayer, willTryAgain, hasLeft, isCanceled;
     
     private CountDownLatch countDownLatch;
     
@@ -90,6 +90,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
         gameID = -1;
         playerNumber = -1;
         isLocalMultiplayer = false;
+        isSinglePlayer = false;
         
         if (isFirst)
             welcomeScene = new Scene(fxmlLoader.load());
@@ -111,8 +112,31 @@ public class TicTacToeApplication extends Application implements SocketManager {
     }
     
     // TODO Add single-player game here once AI component is finished
-//    public void startSinglePlayerGame(Stage primaryStage) throws Exception {
-//    }
+    public void startSinglePlayerGame(Stage primaryStage) throws Exception {
+        System.out.println(clientID);
+        if (clientID == -1) {
+            welcomeView.toggleButtons(false);
+            return;
+        }
+
+        isSinglePlayer = true;
+
+        System.out.println("Sending create game message");
+        connection.sendMessage(new Message("CreateSinglePlayerGame", Long.toString(clientID)));
+
+        countDownLatch = new CountDownLatch(1);
+        new Thread(() -> {
+            try {
+                System.out.println("Waiting for game to be created");
+                countDownLatch.await();
+                Platform.runLater(() -> startGame(primaryStage, GameType.LOCAL_MULTIPLAYER));
+            }
+            catch (InterruptedException e) {
+                System.err.println("Error while waiting for game ID.");
+                System.exit(1);
+            }
+        }).start();
+    }
     
     public void startLocalMultiplayerGame(Stage primaryStage) {
         System.out.println(clientID);
@@ -294,6 +318,9 @@ public class TicTacToeApplication extends Application implements SocketManager {
     
     public void sendMove(String moveInfo) {
         connection.sendMessage(new Message("game/"+gameID+"/"+clientID, moveInfo));
+        if(isSinglePlayer) {
+            connection.sendMessage(new Message("game/"+gameID+"/"+clientID, "MoveAI"));
+        }
     }
     
     public void tryAgain() {
@@ -377,6 +404,23 @@ public class TicTacToeApplication extends Application implements SocketManager {
             if (isLocalMultiplayer) {
                 if (messageText.equals("Continue"))
                     ticTacToeView.enableAvailableGameButtons();
+                else if (messageText.startsWith("Win")) {
+                    if (messageText.charAt(4) == 'X')
+                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.X_WINNER, "X"));
+                    else
+                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.O_WINNER, "O"));
+                }
+                else if (messageText.equals("Tie"))
+                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW, "Tie"));
+            }
+            if (isSinglePlayer) {
+                if (messageText.startsWith("AI")) {
+                    ticTacToeView.disableGameButtons();
+                    ticTacToeView.otherPlaceMove(messageText, false);
+                }
+                else if (messageText.equals("Continue")) {
+                    ticTacToeView.enableAvailableGameButtons();
+                }
                 else if (messageText.startsWith("Win")) {
                     if (messageText.charAt(4) == 'X')
                         Platform.runLater(() -> ticTacToeView.doGameOver(StateType.X_WINNER, "X"));
