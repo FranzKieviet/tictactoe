@@ -16,7 +16,7 @@ public class Game {
         createGame();
         
         this.gameController.sendGameInfo("game/"+this.gameID+"/"+this.client1ID, "JoinChannel");
-        
+
         this.gameController.sendGameInfo(Long.toString(this.client1ID), "GameCreated 3 " + this.gameID);
     }
     
@@ -41,6 +41,8 @@ public class Game {
         isP1Turn = true;
         board = new Board();
     }
+
+    public Board getBoard() {return board;}
     
     public void doMove(int x, int y, PlayType playType, long clientID) {
         if ((isP1Turn && clientID == client1ID) || (!isP1Turn && clientID == client2ID)) {

@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -24,6 +25,8 @@ public class GameController extends Application implements SocketManager {
     private Map<Long, Game> games;
     private Map<String, Long> availableServers;
     private long currentGameID;
+
+    private AI gameAI;
     
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -40,6 +43,8 @@ public class GameController extends Application implements SocketManager {
         
         games = Collections.synchronizedMap(new HashMap<>());
         availableServers = Collections.synchronizedMap(new HashMap<>());
+
+        gameAI = new AI(PlayType.O);
         
         // creates client socket to connect to the server
         try {
@@ -50,6 +55,7 @@ public class GameController extends Application implements SocketManager {
             connection.sendMessage(new Message("CancelServer", "JoinChannel"));
             connection.sendMessage(new Message("GetServers", "JoinChannel"));
             connection.sendMessage(new Message("CreateLocalGame", "JoinChannel"));
+            connection.sendMessage(new Message("CreateSinglePlayerGame", "JoinChannel"));
         }
         catch (Exception e) {
             // could not connect to the server
@@ -119,6 +125,11 @@ public class GameController extends Application implements SocketManager {
             games.put(currentGameID, new Game(this, currentGameID, clientID));
             currentGameID++;
         }
+        else if (channel.equals("CreateSinglePlayerGame")) {
+            long clientID = Long.parseLong(messageText);
+            games.put(currentGameID, new Game(this, currentGameID, clientID));
+            currentGameID++;
+        }
         else if (channel.startsWith("game/")) {
             String[] params = channel.split("/");
             long gameID = Long.parseLong(params[1]);
@@ -130,6 +141,15 @@ public class GameController extends Application implements SocketManager {
                     games.get(gameID).leaveGame(clientID);
                 else if (messageText.equals("TryAgain"))
                     games.get(gameID).willTryAgain(clientID);
+                else if (messageText.equals("MoveAI")) {
+                    Pair<Integer, Integer> move = gameAI.determineMove(games.get(gameID).getBoard());
+                    String info = "AI" + move.getValue().toString() + " " + move.getKey().toString();
+                    games.get(gameID).doMove(move.getKey(), move.getValue(), PlayType.O,
+                            clientID);
+                    sendGameInfo("game/"+gameID+"/"+clientID, info);
+
+
+                }
                 else {
                     params = messageText.split(" ");
                     PlayType playType;
