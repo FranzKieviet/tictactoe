@@ -12,7 +12,7 @@
       fx:controller="com.tictaccode.tictactoeclient.WelcomeView"
       fx:id="pane" prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css">
 
-    <ImageView fx:id="backgroundPattern" preserveRatio="true" smooth="true">
+    <ImageView fx:id="backgroundPattern" preserveRatio="true">
         <Image url="@images/BackgroundPattern2.png" />
     </ImageView>
 
@@ -25,6 +25,13 @@
     <Button fx:id="onlineMultiplayerButton" styleClass="uiButton" text="Online Multiplayer" focusTraversable="false"
             onMouseClicked="#goToOnlineMultiplayer" />
     <Button fx:id="exitButton" styleClass="uiButton" text="Exit" focusTraversable="false" onMouseClicked="#exitGame" />
+
+    <Button fx:id="createServerButton" styleClass="uiButton" text="Create Server" focusTraversable="false"
+            onMouseClicked="#goToCreateServer" visible="false" />
+    <Button fx:id="joinServerButton" styleClass="uiButton" text="Join Server" focusTraversable="false"
+            onMouseClicked="#goToJoinServer" visible="false" />
+    <Button fx:id="backButton" styleClass="uiButton" text="Back" focusTraversable="false" onMouseClicked="#goBack"
+            visible="false" />
 
     <!-- displays the current version of the application -->
     <Text fx:id="versionLabel" x="5" />

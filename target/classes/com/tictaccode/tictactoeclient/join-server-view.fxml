@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.control.ScrollPane?>
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tictaccode.tictactoeclient.JoinServerView"
+      fx:id="pane" prefHeight="600.0" prefWidth="600.0" stylesheets="@styles.css">
+
+    <ImageView fx:id="backgroundPattern" preserveRatio="true">
+        <Image url="@images/BackgroundPattern2.png" />
+    </ImageView>
+
+    <Text fx:id="title" styleClass="title" text="Join Server" />
+
+    <Text fx:id="availableServersLabel" styleClass="uiText" text="Available Servers:" />
+
+    <ScrollPane fx:id="serverScrollPane" hbarPolicy="NEVER"><VBox fx:id="serverContainer"/></ScrollPane>
+
+    <Button fx:id="joinServerButton" styleClass="uiButton" text="Join Server" focusTraversable="false"
+            onMouseClicked="#joinServer" />
+
+    <Button fx:id="backButton" styleClass="uiButton" text="Back" focusTraversable="false" onMouseClicked="#goBack" />
+
+    <Circle fx:id="fade" styleClass="fade" radius="5000" />
+</Pane>

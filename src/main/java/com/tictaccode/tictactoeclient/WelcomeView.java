@@ -22,7 +22,8 @@ public class WelcomeView extends Controller {
     private Text title, versionLabel;
     
     @FXML
-    private Button singleplayerButton, localMultiplayerButton, onlineMultiplayerButton, exitButton;
+    private Button singleplayerButton, localMultiplayerButton, onlineMultiplayerButton, exitButton, createServerButton,
+            joinServerButton, backButton;
     
     @FXML
     private ImageView backgroundPattern;
@@ -41,6 +42,9 @@ public class WelcomeView extends Controller {
         localMultiplayerButton.setFont(Fonts.GAME_FONT);
         onlineMultiplayerButton.setFont(Fonts.GAME_FONT);
         exitButton.setFont(Fonts.GAME_FONT);
+        createServerButton.setFont(Fonts.GAME_FONT);
+        joinServerButton.setFont(Fonts.GAME_FONT);
+        backButton.setFont(Fonts.GAME_FONT);
     
         pane.widthProperty().addListener((observableValue, number, t1) -> updateUI());
         pane.heightProperty().addListener((observableValue, number, t1) -> updateUI());
@@ -56,6 +60,15 @@ public class WelcomeView extends Controller {
     
         exitButton.setOnMouseEntered(e -> Animations.uiButtonHover(exitButton, 35));
         exitButton.setOnMouseExited(e -> Animations.uiButtonIdle(exitButton, 30));
+    
+        createServerButton.setOnMouseEntered(e -> Animations.uiButtonHover(createServerButton, 35));
+        createServerButton.setOnMouseExited(e -> Animations.uiButtonIdle(createServerButton, 30));
+    
+        joinServerButton.setOnMouseEntered(e -> Animations.uiButtonHover(joinServerButton, 35));
+        joinServerButton.setOnMouseExited(e -> Animations.uiButtonIdle(joinServerButton, 30));
+    
+        backButton.setOnMouseEntered(e -> Animations.uiButtonHover(backButton, 35));
+        backButton.setOnMouseExited(e -> Animations.uiButtonIdle(backButton, 30));
     }
     
     
@@ -122,6 +135,27 @@ public class WelcomeView extends Controller {
         exitButton.setLayoutX(sceneWidth / 2 - exitButton.getPrefWidth() / 2);
         exitButton.setLayoutY(onlineMultiplayerButton.getLayoutY() + onlineMultiplayerButton.getPrefHeight() + 20);
     
+        createServerButton.setFont(
+                new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
+        createServerButton.setPrefWidth(createServerButton.getFont().getSize() * 12);
+        createServerButton.setPrefHeight(sceneHeight / 8);
+        createServerButton.setLayoutX(sceneWidth / 2 - createServerButton.getPrefWidth() / 2);
+        createServerButton.setLayoutY(title.getY() + 60);
+    
+        joinServerButton.setFont(
+                new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
+        joinServerButton.setPrefWidth(joinServerButton.getFont().getSize() * 10);
+        joinServerButton.setPrefHeight(sceneHeight / 8);
+        joinServerButton.setLayoutX(sceneWidth / 2  - joinServerButton.getPrefWidth() / 2);
+        joinServerButton.setLayoutY(createServerButton.getLayoutY() + createServerButton.getPrefHeight() + 30);
+    
+        backButton.setFont(
+                new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
+        backButton.setPrefWidth(backButton.getFont().getSize() * 5);
+        backButton.setPrefHeight(sceneHeight / 8);
+        backButton.setLayoutX(sceneWidth / 2  - backButton.getPrefWidth() / 2);
+        backButton.setLayoutY(joinServerButton.getLayoutY() + joinServerButton.getPrefHeight() + 30);
+    
         versionLabel.setY(sceneHeight - 10);
     }
     
@@ -171,18 +205,30 @@ public class WelcomeView extends Controller {
     
     
     public void goToOnlineMultiplayer() {
+        toggleOnlineOptions(true);
+    }
+    
+    
+    public void goToCreateServer() {
         toggleButtons(true);
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
     
-        fadeOut.setOnFinished(e -> {
-            try {
-                application.startOnlineMultiplayerGame(stage);
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        fadeOut.setOnFinished(e -> application.startCreateServer(stage));
         fadeOut.play();
+    }
+    
+    
+    public void goToJoinServer() {
+        toggleButtons(true);
+        Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
+    
+        fadeOut.setOnFinished(e -> application.startJoinServer(stage));
+        fadeOut.play();
+    }
+    
+    
+    public void goBack() {
+        toggleOnlineOptions(false);
     }
     
     
@@ -192,10 +238,26 @@ public class WelcomeView extends Controller {
     }
     
     
+    public void toggleOnlineOptions(boolean toggle) {
+        singleplayerButton.setVisible(!toggle);
+        localMultiplayerButton.setVisible(!toggle);
+        onlineMultiplayerButton.setVisible(!toggle);
+        exitButton.setVisible(!toggle);
+    
+        createServerButton.setVisible(toggle);
+        joinServerButton.setVisible(toggle);
+        backButton.setVisible(toggle);
+    }
+    
+    
     public void toggleButtons(boolean disable) {
         singleplayerButton.setDisable(disable);
         localMultiplayerButton.setDisable(disable);
         onlineMultiplayerButton.setDisable(disable);
         exitButton.setDisable(disable);
+        
+        createServerButton.setDisable(disable);
+        joinServerButton.setDisable(disable);
+        backButton.setDisable(disable);
     }
 }

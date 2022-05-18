@@ -33,11 +33,15 @@ public class TicTacToeApplication extends Application implements SocketManager {
     
     private WelcomeView welcomeView;
     
+    private CreateServerView createServerView;
+    
+    private JoinServerView joinServerView;
+    
     private TicTacToeView ticTacToeView;
     
     private ResultsView resultsView;
     
-    private boolean isFirst, isLocalMultiplayer, willTryAgain, hasLeft;
+    private boolean isFirst, isLocalMultiplayer, willTryAgain, hasLeft, isCanceled;
     
     private CountDownLatch countDownLatch;
     
@@ -136,22 +140,73 @@ public class TicTacToeApplication extends Application implements SocketManager {
         }).start();
     }
     
-    public void startOnlineMultiplayerGame(Stage primaryStage) {
-        System.out.println(clientID);
-        if (clientID == -1) {
-            welcomeView.toggleButtons(false);
-            return;
+    public void startCreateServer(Stage primaryStage) {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("create-server-view.fxml"));
+        Scene createServerScene = null;
+        try {
+            createServerScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(),
+                    primaryStage.getScene().getHeight());
+        }
+        catch (IOException e) {
+            System.err.println("Error while loading FXML file for the create server UI.");
+            System.exit(1);
         }
         
-        System.out.println("Sending create game message");
-        connection.sendMessage(new Message("CreateGame", Long.toString(clientID)));
+        createServerView = fxmlLoader.getController();
+        createServerView.setApplication(this);
+        createServerView.setStage(primaryStage);
+        
+        primaryStage.setScene(createServerScene);
+        primaryStage.show();
+        
+        createServerView.startUI();
+        createServerView.fadeIn();
+    }
+    
+    public void startJoinServer(Stage primaryStage) {
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("join-server-view.fxml"));
+        Scene joinServerScene = null;
+        try {
+            joinServerScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(),
+                    primaryStage.getScene().getHeight());
+        }
+        catch (IOException e) {
+            System.err.println("Error while loading FXML file for the join server UI.");
+            System.exit(1);
+        }
+        
+        joinServerView = fxmlLoader.getController();
+        joinServerView.setApplication(this);
+        joinServerView.setStage(primaryStage);
+        
+        System.out.println("Sending get servers message");
+        connection.sendMessage(new Message("GetServers", "JoinChannel"));
+        connection.sendMessage(new Message("GetServers", "GetAllServers " + clientID));
+        
+        primaryStage.setScene(joinServerScene);
+        primaryStage.show();
+    
+        joinServerView.startUI();
+        joinServerView.fadeIn();
+    }
+    
+    public void createServer(String serverName) throws RuntimeException {
+        System.out.println(clientID);
+        if (clientID == -1)
+            throw new RuntimeException("Client ID is not valid.");
+        
+        System.out.println("Sending create server message");
+        connection.sendMessage(new Message("CreateServer", clientID + " " + serverName));
+    
+        isCanceled = false;
         
         countDownLatch = new CountDownLatch(1);
         new Thread(() -> {
             try {
                 System.out.println("Waiting for game to be created");
                 countDownLatch.await();
-                Platform.runLater(() -> startGame(primaryStage, GameType.ONLINE_MULTIPLAYER));
+                if (!isCanceled)
+                    Platform.runLater(() -> createServerView.creatingServer());
             }
             catch (InterruptedException e) {
                 System.err.println("Error while waiting for game ID.");
@@ -160,7 +215,50 @@ public class TicTacToeApplication extends Application implements SocketManager {
         }).start();
     }
     
+    public void joinServer(String serverName) throws RuntimeException {
+        System.out.println(clientID);
+        if (clientID == -1)
+            throw new RuntimeException("Client ID is not valid.");
+    
+        System.out.println("Sending join server message");
+        connection.sendMessage(new Message("JoinServer", clientID + " " + serverName));
+    
+        isCanceled = false;
+    
+        countDownLatch = new CountDownLatch(1);
+        new Thread(() -> {
+            try {
+                System.out.println("Waiting for game to be created");
+                countDownLatch.await();
+                stopServerListening();
+                Platform.runLater(() -> joinServerView.joiningServer());
+            }
+            catch (InterruptedException e) {
+                System.err.println("Error while waiting for game ID.");
+                System.exit(1);
+            }
+        }).start();
+    }
+    
+    public void cancelServer(String serverName) {
+        System.out.println("Sending cancel game message");
+        connection.sendMessage(new Message("CancelServer", clientID + " " + serverName));
+        
+        isCanceled = true;
+        if (countDownLatch != null)
+            countDownLatch.countDown();
+    }
+    
+    public void stopServerListening() {
+        connection.sendMessage(new Message("GetServers", "ExitChannel"));
+    }
+    
     public void startGame(Stage primaryStage, GameType gameType) {
+        if (gameType == GameType.ONLINE_MULTIPLAYER && isCanceled) {
+            System.out.println("Server cancelled");
+            return;
+        }
+        
         System.out.println(gameID);
         System.out.println("Game created, loading scene");
         
@@ -170,7 +268,8 @@ public class TicTacToeApplication extends Application implements SocketManager {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("tictactoe-view.fxml"));
         Scene ticTacToeScene = null;
         try {
-            ticTacToeScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+            ticTacToeScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(),
+                    primaryStage.getScene().getHeight());
         }
         catch (IOException e) {
             System.err.println("Error while loading FXML file for the tic-tac-toe board UI.");
@@ -232,7 +331,8 @@ public class TicTacToeApplication extends Application implements SocketManager {
     public void startResultsScreen(Stage primaryStage, StateType stateType, GameType gameType,
                                    String whoWon) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeApplication.class.getResource("results-view.fxml"));
-        Scene resultsScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+        Scene resultsScene = new Scene(fxmlLoader.load(), primaryStage.getScene().getWidth(),
+                primaryStage.getScene().getHeight());
         
         resultsView = fxmlLoader.getController();
         resultsView.setApplication(this);
@@ -258,6 +358,14 @@ public class TicTacToeApplication extends Application implements SocketManager {
         
         if (channel.equals("ClientID"))
             clientID = Long.parseLong(messageText);
+        else if (channel.equals(String.valueOf(clientID)) && messageText.startsWith("AddServer "))
+            joinServerView.addServer(messageText.substring(10));
+        else if (channel.equals("GetServers")) {
+            if (messageText.startsWith("add "))
+                joinServerView.addServer(messageText.substring(4));
+            else if (messageText.startsWith("remove "))
+                joinServerView.removeServer(messageText.substring(7));
+        }
         else if (channel.equals(Long.toString(clientID)) && messageText.startsWith("GameCreated")) {
             playerNumber = Integer.parseInt(messageText.substring(12, 13));
             gameID = Long.parseLong(messageText.substring(14));

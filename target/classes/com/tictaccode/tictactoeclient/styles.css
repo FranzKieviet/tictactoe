@@ -52,7 +52,18 @@
     -fx-fill: #F0F0F0;
 }
 
-#turnLabel {
+.uiText {
     -fx-font-size: 30;
     -fx-fill: #F0F0F0;
+}
+
+.uiTextField {
+    -fx-font-size: 30;
+    -fx-text-fill: #F0F0F0;
+    -fx-background-color: #353535;
+}
+
+#serverScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
 }
