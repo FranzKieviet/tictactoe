@@ -111,8 +111,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
             welcomeView.fadeIn();
     }
     
-    // TODO Add single-player game here once AI component is finished
-    public void startSinglePlayerGame(Stage primaryStage) throws Exception {
+    public void startSinglePlayerGame(Stage primaryStage) {
         System.out.println(clientID);
         if (clientID == -1) {
             welcomeView.toggleButtons(false);
