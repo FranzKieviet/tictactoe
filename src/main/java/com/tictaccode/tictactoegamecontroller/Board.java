@@ -14,8 +14,6 @@ public class Board {
     
     /**
      * Constructor that creates a new board object and initializes private data members.
-     *
-     * @param controller is the UI controller that is referenced by the Board class.
      */
     public Board() {
         boardSpots = new PlayType[BOARD_SIZE][BOARD_SIZE];

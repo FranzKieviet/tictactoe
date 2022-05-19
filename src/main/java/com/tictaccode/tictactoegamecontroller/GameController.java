@@ -136,33 +136,35 @@ public class GameController extends Application implements SocketManager {
             
             if (games.containsKey(gameID)) {
                 long clientID = Long.parseLong(params[2]);
-                
-                if (messageText.equals("LeaveGame"))
-                    games.get(gameID).leaveGame(clientID);
-                else if (messageText.equals("TryAgain"))
-                    games.get(gameID).willTryAgain(clientID);
-                else if (messageText.equals("MoveAI")) {
-                    Pair<Integer, Integer> move = gameAI.determineMove(games.get(gameID).getBoard());
-                    String info = "AI" + move.getValue().toString() + " " + move.getKey().toString();
-                    games.get(gameID).doMove(move.getKey(), move.getValue(), PlayType.O,
-                            clientID);
-                    sendGameInfo("game/"+gameID+"/"+clientID, info);
-
-
-                }
-                else {
-                    params = messageText.split(" ");
-                    PlayType playType;
     
-                    if (params[0].equals("X"))
-                        playType = PlayType.X;
-                    else if (params[0].equals("O"))
-                        playType = PlayType.O;
-                    else
-                        return;
-    
-                    games.get(gameID).doMove(Integer.parseInt(params[2]), Integer.parseInt(params[1]), playType,
-                            clientID);
+                switch (messageText) {
+                    case "LeaveGame":
+                        games.get(gameID).leaveGame(clientID);
+                        break;
+                    case "TryAgain":
+                        games.get(gameID).willTryAgain(clientID);
+                        break;
+                    case "MoveAI":
+                        Pair<Integer, Integer> move = gameAI.determineMove(games.get(gameID).getBoard());
+                        String info = "AI" + move.getValue().toString() + " " + move.getKey().toString();
+                        games.get(gameID).doMove(move.getKey(), move.getValue(), PlayType.O,
+                                clientID);
+                        sendGameInfo("game/" + gameID + "/" + clientID, info);
+                        break;
+                    default:
+                        params = messageText.split(" ");
+                        PlayType playType;
+            
+                        if (params[0].equals("X"))
+                            playType = PlayType.X;
+                        else if (params[0].equals("O"))
+                            playType = PlayType.O;
+                        else
+                            return;
+            
+                        games.get(gameID).doMove(Integer.parseInt(params[2]), Integer.parseInt(params[1]), playType,
+                                clientID);
+                        break;
                 }
             }
         }
