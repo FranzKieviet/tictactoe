@@ -59,6 +59,7 @@ public class TicTacToeView extends Controller {
     
     private boolean isGameOver;
     
+    private double minBackgroundSize;
     
     /**
      * The initialize() method is automatically called by javafx when the controller class is first called.
@@ -99,6 +100,9 @@ public class TicTacToeView extends Controller {
     
     @Override
     public void startUI() {
+        minBackgroundSize = Math.max(backgroundPattern.getScene().getWidth(),
+                backgroundPattern.getScene().getHeight()) * 2;
+        
         updateUI();
         
         double width = gameFade.getScene().getWidth();
@@ -130,7 +134,7 @@ public class TicTacToeView extends Controller {
         double sceneHeight = boardImage.getScene().getHeight();
         
         boardImage.setFitWidth(Math.min(sceneWidth, sceneHeight) - 200);
-        backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
+        backgroundPattern.setFitWidth(Math.max(minBackgroundSize, (Math.max(sceneWidth, sceneHeight) * 2)));
         
         turnLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
         turnLabel.setY(turnLabel.getFont().getSize() * 1.5);

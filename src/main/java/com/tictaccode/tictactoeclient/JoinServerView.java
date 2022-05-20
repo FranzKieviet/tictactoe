@@ -40,6 +40,8 @@ public class JoinServerView extends Controller {
     @FXML
     private Circle fade;
     
+    private double minBackgroundSize;
+    
     private TicTacToeApplication application;
     private Stage stage;
     private Button selectedButton;
@@ -66,6 +68,9 @@ public class JoinServerView extends Controller {
     
     @Override
     public void startUI() {
+        minBackgroundSize = Math.max(backgroundPattern.getScene().getWidth(),
+                backgroundPattern.getScene().getHeight()) * 2;
+        
         updateUI();
     
         double width = fade.getScene().getWidth();
@@ -95,7 +100,7 @@ public class JoinServerView extends Controller {
         double sceneWidth = backgroundPattern.getScene().getWidth();
         double sceneHeight = backgroundPattern.getScene().getHeight();
     
-        backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
+        backgroundPattern.setFitWidth(Math.max(minBackgroundSize, (Math.max(sceneWidth, sceneHeight) * 2)));
     
         title.setFont(new Font(Fonts.GAME_FONT.getFamily(), 60 * Math.min(sceneWidth, sceneHeight) / 600));
         title.setX(sceneWidth / 2 - title.getFont().getSize() * 3.2);

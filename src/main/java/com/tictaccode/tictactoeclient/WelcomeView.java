@@ -31,6 +31,8 @@ public class WelcomeView extends Controller {
     @FXML
     private Circle fade;
     
+    private double minBackgroundSize;
+    
     
     public void initialize() {
         // sets the text of the version label based on the current version of the application
@@ -74,6 +76,9 @@ public class WelcomeView extends Controller {
     
     @Override
     public void startUI() {
+        minBackgroundSize = Math.max(backgroundPattern.getScene().getWidth(),
+                backgroundPattern.getScene().getHeight()) * 2;
+        
         updateUI();
     
         TranslateTransition backgroundAnimation = new TranslateTransition(Duration.seconds(150), backgroundPattern);
@@ -97,7 +102,7 @@ public class WelcomeView extends Controller {
         double sceneWidth = backgroundPattern.getScene().getWidth();
         double sceneHeight = backgroundPattern.getScene().getHeight();
         
-        backgroundPattern.setFitWidth(Math.max(sceneWidth, sceneHeight) * 2);
+        backgroundPattern.setFitWidth(Math.max(minBackgroundSize, (Math.max(sceneWidth, sceneHeight) * 2)));
     
         title.setFont(new Font(Fonts.GAME_FONT.getFamily(), 60 * Math.min(sceneWidth, sceneHeight) / 600));
         title.setX(sceneWidth / 2 - title.getFont().getSize() * 3.4);
