@@ -4,7 +4,7 @@ public class Game {
     private GameController gameController;
     
     private long gameID, client1ID, client2ID;
-    private boolean isP1Turn, c1TryAgain, c2TryAgain;
+    private boolean isP1Turn, c1TryAgain, c2TryAgain, isGameOver;
     private Board board;
     
     public Game(GameController gameController, long gameID, long clientID) {
@@ -39,6 +39,7 @@ public class Game {
         c1TryAgain = false;
         c2TryAgain = false;
         isP1Turn = true;
+        isGameOver = false;
         board = new Board();
     }
 
@@ -52,12 +53,15 @@ public class Game {
                 switch (board.checkState()) {
                     case X_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win X");
+                        isGameOver = true;
                         break;
                     case O_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win O");
+                        isGameOver = true;
                         break;
                     case DRAW:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Tie");
+                        isGameOver = true;
                         break;
                     default:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Continue");
@@ -68,14 +72,17 @@ public class Game {
                     case X_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Win");
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Lose "+playType+" "+y+" "+x);
+                        isGameOver = true;
                         break;
                     case O_WINNER:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Lose "+playType+" "+y+" "+x);
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Win");
+                        isGameOver = true;
                         break;
                     case DRAW:
                         gameController.sendGameInfo("game/"+gameID+"/"+client1ID, "Tie");
                         gameController.sendGameInfo("game/"+gameID+"/"+client2ID, "Tie");
+                        isGameOver = true;
                         break;
                     default:
                         gameController.sendGameInfo("game/"+gameID+"/"+(isP1Turn ? client2ID : client1ID),
@@ -87,8 +94,12 @@ public class Game {
         }
     }
     
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+    
     public void willTryAgain(long clientID) {
-        if (client1ID == client2ID) {
+        if (client1ID == client2ID || client2ID == -1) {
             createGame();
             return;
         }

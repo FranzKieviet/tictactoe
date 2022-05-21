@@ -127,7 +127,7 @@ public class GameController extends Application implements SocketManager {
         }
         else if (channel.equals("CreateSinglePlayerGame")) {
             long clientID = Long.parseLong(messageText);
-            games.put(currentGameID, new Game(this, currentGameID, clientID));
+            games.put(currentGameID, new Game(this, currentGameID, clientID, -1));
             currentGameID++;
         }
         else if (channel.startsWith("game/")) {
@@ -144,26 +144,30 @@ public class GameController extends Application implements SocketManager {
                     case "TryAgain":
                         games.get(gameID).willTryAgain(clientID);
                         break;
-                    case "MoveAI":
-                        Pair<Integer, Integer> move = gameAI.determineMove(games.get(gameID).getBoard());
-                        String info = "AI" + move.getValue().toString() + " " + move.getKey().toString();
-                        games.get(gameID).doMove(move.getKey(), move.getValue(), PlayType.O,
-                                clientID);
-                        sendGameInfo("game/" + gameID + "/" + clientID, info);
-                        break;
                     default:
                         params = messageText.split(" ");
                         PlayType playType;
+                        int moveIndex = 0;
+                        
+                        if (params[0].equals("SP"))
+                            moveIndex++;
             
-                        if (params[0].equals("X"))
+                        if (params[moveIndex].equals("X"))
                             playType = PlayType.X;
-                        else if (params[0].equals("O"))
+                        else if (params[moveIndex].equals("O"))
                             playType = PlayType.O;
                         else
                             return;
             
-                        games.get(gameID).doMove(Integer.parseInt(params[2]), Integer.parseInt(params[1]), playType,
-                                clientID);
+                        Game g = games.get(gameID);
+                        g.doMove(Integer.parseInt(params[moveIndex + 2]), Integer.parseInt(params[moveIndex + 1]),
+                                playType, clientID);
+                        
+                        if (params[0].equals("SP") && !g.isGameOver()) {
+                            Pair<Integer, Integer> move = gameAI.determineMove(g.getBoard());
+                            games.get(gameID).doMove(move.getKey(), move.getValue(), PlayType.O, -1);
+                        }
+                        
                         break;
                 }
             }
