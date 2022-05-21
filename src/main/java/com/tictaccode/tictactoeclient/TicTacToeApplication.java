@@ -128,7 +128,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
             try {
                 System.out.println("Waiting for game to be created");
                 countDownLatch.await();
-                Platform.runLater(() -> startGame(primaryStage, GameType.LOCAL_MULTIPLAYER));
+                Platform.runLater(() -> startGame(primaryStage, GameType.SINGLEPLAYER));
             }
             catch (InterruptedException e) {
                 System.err.println("Error while waiting for game ID.");
@@ -316,10 +316,8 @@ public class TicTacToeApplication extends Application implements SocketManager {
     }
     
     public void sendMove(String moveInfo) {
-        connection.sendMessage(new Message("game/"+gameID+"/"+clientID, moveInfo));
-        if(isSinglePlayer) {
-            connection.sendMessage(new Message("game/"+gameID+"/"+clientID, "MoveAI"));
-        }
+        connection.sendMessage(new Message("game/"+gameID+"/"+clientID,
+                (isSinglePlayer ? "SP " + moveInfo : moveInfo)));
     }
     
     public void tryAgain() {
@@ -403,23 +401,6 @@ public class TicTacToeApplication extends Application implements SocketManager {
             if (isLocalMultiplayer) {
                 if (messageText.equals("Continue"))
                     ticTacToeView.enableAvailableGameButtons();
-                else if (messageText.startsWith("Win")) {
-                    if (messageText.charAt(4) == 'X')
-                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.X_WINNER, "X"));
-                    else
-                        Platform.runLater(() -> ticTacToeView.doGameOver(StateType.O_WINNER, "O"));
-                }
-                else if (messageText.equals("Tie"))
-                    Platform.runLater(() -> ticTacToeView.doGameOver(StateType.DRAW, "Tie"));
-            }
-            if (isSinglePlayer) {
-                if (messageText.startsWith("AI")) {
-                    ticTacToeView.disableGameButtons();
-                    ticTacToeView.otherPlaceMove(messageText, false);
-                }
-                else if (messageText.equals("Continue")) {
-                    ticTacToeView.enableAvailableGameButtons();
-                }
                 else if (messageText.startsWith("Win")) {
                     if (messageText.charAt(4) == 'X')
                         Platform.runLater(() -> ticTacToeView.doGameOver(StateType.X_WINNER, "X"));

@@ -74,7 +74,7 @@ public class GamePiece {
         timeline.setOnFinished(e -> {
             fade.setVisible(false);
         
-            if (gameType == GameType.LOCAL_MULTIPLAYER)
+            if (gameType == GameType.LOCAL_MULTIPLAYER || gameType == GameType.SINGLEPLAYER)
                 controller.getTurnLabel().setText((controller.getTurnCount() % 2 == 1 ? "X's Turn" : "O's Turn"));
             else {
                 controller.getTurnLabel().setText((playerCurrentTurn ? "Opponent's Turn" : "Your Turn"));

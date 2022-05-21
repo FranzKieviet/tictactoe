@@ -139,7 +139,7 @@ public class TicTacToeView extends Controller {
         turnLabel.setFont(new Font(Fonts.GAME_FONT.getFamily(), 30 * Math.min(sceneWidth, sceneHeight) / 600));
         turnLabel.setY(turnLabel.getFont().getSize() * 1.5);
     
-        if (gameType == GameType.LOCAL_MULTIPLAYER)
+        if (gameType == GameType.LOCAL_MULTIPLAYER || gameType == GameType.SINGLEPLAYER)
             turnLabel.setX(sceneWidth / 2 - turnLabel.getFont().getSize() * 2.3);
         else {
             if (turnLabel.getText().startsWith("Your"))
@@ -196,7 +196,7 @@ public class TicTacToeView extends Controller {
     
     
     public void setPlayerTurn(boolean playerCurrentTurn) {
-        if (gameType == GameType.LOCAL_MULTIPLAYER)
+        if (gameType == GameType.LOCAL_MULTIPLAYER || gameType == GameType.SINGLEPLAYER)
             turnLabel.setText((turnCount % 2 == 1 ? "X's Turn" : "O's Turn"));
         else {
             turnLabel.setText((playerCurrentTurn ? "Your Turn" : "Opponent's Turn"));
