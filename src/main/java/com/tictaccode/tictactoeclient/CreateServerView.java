@@ -191,6 +191,12 @@ public class CreateServerView extends Controller {
     }
     
     
+    public void cancelServer() {
+        if (createServerButton.getText().equals("Cancel Server"))
+            application.cancelServer(serverNameInput.getText().trim());
+    }
+    
+    
     public void goBack() {
         backButton.setDisable(true);
         createServerButton.setDisable(true);

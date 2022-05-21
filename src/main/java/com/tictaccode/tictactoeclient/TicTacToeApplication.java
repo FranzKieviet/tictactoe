@@ -351,7 +351,7 @@ public class TicTacToeApplication extends Application implements SocketManager {
         
         hasLeft = true;
         willTryAgain = false;
-        if (countDownLatch.getCount() > 0)
+        if (countDownLatch != null && countDownLatch.getCount() > 0)
             countDownLatch.countDown();
     }
     
@@ -460,6 +460,10 @@ public class TicTacToeApplication extends Application implements SocketManager {
     }
     
     public void exitGame() {
+        if (createServerView != null)
+            createServerView.cancelServer();
+        
+        leaveGame();
         connection.closeSocket();
     }
     
