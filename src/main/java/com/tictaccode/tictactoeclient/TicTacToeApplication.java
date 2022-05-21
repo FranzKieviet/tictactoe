@@ -253,7 +253,6 @@ public class TicTacToeApplication extends Application implements SocketManager {
             try {
                 System.out.println("Waiting for game to be created");
                 countDownLatch.await();
-                stopServerListening();
                 Platform.runLater(() -> joinServerView.joiningServer());
             }
             catch (InterruptedException e) {
@@ -278,6 +277,10 @@ public class TicTacToeApplication extends Application implements SocketManager {
     
     public void startGame(Stage primaryStage, GameType gameType) {
         if (gameType == GameType.ONLINE_MULTIPLAYER && isCanceled) {
+            try {
+                startWelcomeScreen(primaryStage);
+            }
+            catch (Exception ignored) {}
             System.out.println("Server cancelled");
             return;
         }

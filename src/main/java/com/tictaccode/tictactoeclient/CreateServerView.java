@@ -182,6 +182,9 @@ public class CreateServerView extends Controller {
     
     
     public void creatingServer() {
+        backButton.setDisable(true);
+        createServerButton.setDisable(true);
+        
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
         fadeOut.setOnFinished(e -> application.startGame(stage, GameType.ONLINE_MULTIPLAYER));
         fadeOut.play();

@@ -63,6 +63,7 @@ public class JoinServerView extends Controller {
         backButton.setOnMouseExited(e -> Animations.uiButtonIdle(backButton, 30));
         
         selectedButton = null;
+        joinServerButton.setDisable(true);
     }
     
     
@@ -170,8 +171,10 @@ public class JoinServerView extends Controller {
     
     
     public void removeServer(String server) {
-        if (selectedButton != null && selectedButton.getText().equals(server))
+        if (selectedButton != null && selectedButton.getText().equals(server)) {
             selectedButton = null;
+            joinServerButton.setDisable(true);
+        }
         
         Platform.runLater(() -> serverContainer.getChildren().removeIf(n -> ((Button)n).getText().equals(server)));
     }
@@ -184,12 +187,15 @@ public class JoinServerView extends Controller {
         
         Button tempButton = (Button)e.getSource();
         
-        if (tempButton.equals(selectedButton))
+        if (tempButton.equals(selectedButton)) {
             selectedButton = null;
+            joinServerButton.setDisable(true);
+        }
         else {
             selectedButton = tempButton;
             selectedButton.setStyle("-fx-border-color: #151515; -fx-border-width: 1; -fx-background-radius: 1; " +
                     "-fx-background-color: #3C5AC8; -fx-text-fill: #F0F0F0; -fx-text-alignment: left;");
+            joinServerButton.setDisable(false);
         }
     }
     
@@ -205,6 +211,11 @@ public class JoinServerView extends Controller {
     
     
     public void joiningServer() {
+        backButton.setDisable(true);
+        joinServerButton.setDisable(true);
+        serverContainer.getChildren().forEach(node -> node.setDisable(true));
+        application.stopServerListening();
+        
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
         fadeOut.setOnFinished(e -> application.startGame(stage, GameType.ONLINE_MULTIPLAYER));
         fadeOut.play();
@@ -214,6 +225,7 @@ public class JoinServerView extends Controller {
     public void goBack() {
         backButton.setDisable(true);
         joinServerButton.setDisable(true);
+        serverContainer.getChildren().forEach(node -> node.setDisable(true));
         application.stopServerListening();
         
         Timeline fadeOut = Animations.getFadeOutTimeline(fade, 100);
